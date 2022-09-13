@@ -1,0 +1,7 @@
+C:\Users\Chris\Documents\.NET Development\SimpleBankManagementSystemWin\obj\Release\SimpleBankManagementSystemWin.csproj.AssemblyReference.cache
+C:\Users\Chris\Documents\.NET Development\SimpleBankManagementSystemWin\obj\Release\SimpleBankManagementSystemWin.csproj.CoreCompileInputs.cache
+C:\Users\Chris\Documents\.NET Development\SimpleBankManagementSystemWin\bin\Release\SimpleBankManagementSystemWin.exe.config
+C:\Users\Chris\Documents\.NET Development\SimpleBankManagementSystemWin\bin\Release\SimpleBankManagementSystemWin.exe
+C:\Users\Chris\Documents\.NET Development\SimpleBankManagementSystemWin\bin\Release\SimpleBankManagementSystemWin.pdb
+C:\Users\Chris\Documents\.NET Development\SimpleBankManagementSystemWin\obj\Release\SimpleBankManagementSystemWin.exe
+C:\Users\Chris\Documents\.NET Development\SimpleBankManagementSystemWin\obj\Release\SimpleBankManagementSystemWin.pdb
