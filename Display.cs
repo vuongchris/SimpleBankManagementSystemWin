@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 
 namespace SimpleBankManagementSystemWin
@@ -117,11 +118,26 @@ namespace SimpleBankManagementSystemWin
         }
 
 
-        public void DisplayTransactions(string accountNumber)
+        public void DisplayTransactions(string accountNumber, int y)
         {
+            int counter;
             Account account = new Account(accountNumber);
             Console.ForegroundColor = ConsoleColor.White;
-
+            AddBox(9, 60, y);
+            CentreText("Last 5 Transactions", 60, y + 2);
+            List<(DateTime, string, double, double)> transactionHistory = account.TransactionHistory;
+            transactionHistory.Reverse();
+            if (transactionHistory.Count < 5)
+            {
+                counter = transactionHistory.Count;
+            } else
+            {
+                counter = 5;
+            }
+            for (int i = 0; i < counter; i++)
+            {
+                WriteAt($"{transactionHistory[i].Item1} {transactionHistory[i].Item2} {transactionHistory[i].Item3} {transactionHistory[i].Item4}", 2, y + 4 + i);
+            }
         }
 
         public void DepositScreen()

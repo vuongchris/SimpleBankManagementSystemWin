@@ -11,11 +11,9 @@ namespace SimpleBankManagementSystemWin
         int counter;
         double balance;
         List<(DateTime, string, double, double)> transactionHistory;
-        Display display;
 
         public Account(string account)
         {
-            display = new Display();
             directory = Directory.GetCurrentDirectory();
             transactionHistory = new List<(DateTime date, string transactionType, double transactionAmount, double totalBalance)>();
             counter = 0;
@@ -93,12 +91,6 @@ namespace SimpleBankManagementSystemWin
             }
         }
 
-        public void LastFiveTransactions()
-        {
-            int total = transactionHistory.Count;
-
-        }
-
         public string FirstName
         {
             get { return firstName; }
@@ -139,6 +131,11 @@ namespace SimpleBankManagementSystemWin
         {
             get { return balance; }
             set { balance = value; }
+        }
+
+        public List<(DateTime, string, double, double)> TransactionHistory
+        {
+            get { return transactionHistory; }
         }
     }
 }

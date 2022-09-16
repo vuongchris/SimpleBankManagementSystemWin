@@ -13,7 +13,7 @@ namespace SimpleBankManagementSystemWin
         Display display;
         MailMessage message;
         SmtpClient smtp;
-
+        List<(DateTime, string, double, double)> transactionHistory;
         public Email()
         {
             display = new Display();
@@ -45,25 +45,34 @@ namespace SimpleBankManagementSystemWin
 
             } catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                Console.ReadKey();
+                display.ErrorMessage("Email Could Not Be Sent!", 2, 25);
             }
-            display.SuccessMessage("Email Successfully Sent", 2, 25);
+            display.SuccessMessage("Email Sent Successfully!", 2, 25);
         }
 
         public string emailTemplate(string accountNumber)
         {
             account = new Account(accountNumber);
-
+            transactionHistory = account.TransactionHistory;
             string messageBody = 
                 $"<h1>Account Statement</h1><br>" + 
-                $"<p>Account No: {account.AccountNumber}</p><br>" + 
-                $"<p>Account Balance: ${account.Balance}</p><br>" + 
-                $"<p>First Name: {account.FirstName}</p><br>" + 
-                $"<p>Last Name: {account.LastName}</p><br>" + 
-                $"<p>Address: {account.Address}</p><br>" + 
-                $"<p>Phone: {account.PhoneNumber}</p><br>" + 
-                $"<p>Email: {account.EmailAddress}</p><br>";
+                $"<p>Account No: {account.AccountNumber}</p>" + 
+                $"<p>Account Balance: ${account.Balance}</p>" + 
+                $"<p>First Name: {account.FirstName}</p>" + 
+                $"<p>Last Name: {account.LastName}</p>" + 
+                $"<p>Address: {account.Address}</p>" + 
+                $"<p>Phone: {account.PhoneNumber}</p>" + 
+                $"<p>Email: {account.EmailAddress}</p><br>" +
+                $"<h2>Transaction History</h2>" + 
+                $"<table><tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance</th></tr>";
+
+            foreach (var element in transactionHistory) 
+            {
+                messageBody += $"<tr><td>{element.Item1}</td><td>{element.Item2}</td><td>${element.Item3}</td><td>${element.Item4}</td></tr>";
+            }
+
+            messageBody += $"</table>";
+
             return messageBody;
         }
 

@@ -250,7 +250,7 @@ namespace SimpleBankManagementSystemWin
                                     {
                                         account.Withdraw(balance);
                                         display.SuccessMessage("Withdraw Successful!", 2, 10);
-                                        retry = display.PromptMessage("Deposit another account", 2, 11);
+                                        retry = display.PromptMessage("Withdraw another account", 2, 11);
                                     }
                                 }
                             }
@@ -273,46 +273,27 @@ namespace SimpleBankManagementSystemWin
                 display.StatementScreen();
                 accountNumber = input.StringInput(22, 6);
                 display.AddBox(3, 60, 8);
-                if (!input.ValidateInt(accountNumber))
+                bool foundAccount = FindAccount(accountNumber, 2, 9);
+                if (foundAccount)
                 {
-                    display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", 2, 9);
-                    retry = display.PromptMessage("Retry", 2, 10);
+                    display.SuccessMessage("Account Found!", 2, 9);
+                    display.SuccessMessage("Statement is shown below.", 2, 10);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    display.AddBox(1, 60, 12);
+                    display.CentreText("ACCOUNT STATEMENT", 60, 13);
+                    display.DisplayDetails(accountNumber, 14);
+                    display.DisplayTransactions(accountNumber, 24);
+                    display.AddBox(3, 60, 34);
+                    bool sendEmail = display.PromptMessage("Send statement to Email", 2, 35);
+                    if (sendEmail)
+                    {
+                        email.sendEmail(accountNumber);
+                    }
+                    retry = display.PromptMessage("Check another account", 2, 36);
                 }
                 else
                 {
-                    if (!input.ValidateLength(accountNumber, 10))
-                    {
-                        display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", 2, 9);
-                        retry = display.PromptMessage("Retry", 2, 10);
-                    }
-                    else
-                    {
-                        if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
-                        {
-                            display.SuccessMessage("Account Found!", 2, 9);
-                            display.SuccessMessage("Statement is shown below.", 2, 10);
-                            Console.ForegroundColor = ConsoleColor.White;
-                            display.AddBox(1, 60, 12);
-                            display.CentreText("ACCOUNT STATEMENT", 60, 13);
-                            display.DisplayDetails(accountNumber, 14);
-                            display.AddBox(3, 60, 24);
-                            bool sendEmail = display.PromptMessage("Send statement to Email", 2, 25);
-                            if (sendEmail)
-                            {
-                                email.sendEmail(accountNumber);
-                                retry = display.PromptMessage("Check another account", 2, 26);
-                            }
-                            else
-                            {
-                                retry = display.PromptMessage("Check another account", 2, 26);
-                            }
-                        }
-                        else
-                        {
-                            display.ErrorMessage("Account File Not Found!", 2, 9);
-                            retry = display.PromptMessage("Retry", 2, 10);
-                        }
-                    }
+                    retry = display.PromptMessage("Retry", 2, 10);
                 }
             }
         }
@@ -325,46 +306,54 @@ namespace SimpleBankManagementSystemWin
                 display.DeleteAccountScreen();
                 accountNumber = input.StringInput(22, 6);
                 display.AddBox(3, 60, 8);
-                if (!input.ValidateInt(accountNumber))
+                bool foundAccount = FindAccount(accountNumber, 2, 9);
+                if (foundAccount)
                 {
-                    display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", 2, 9);
+                    display.SearchSuccessScreen();
+                    display.DisplayDetails(accountNumber, 12);
+                    display.AddBox(3, 60, 22);
+                    bool delete = display.PromptMessage("Delete", 2, 23);
+                    if (delete)
+                    {
+                        File.Delete($@"{directory}\\Accounts\\{accountNumber}.txt");
+                        display.SuccessMessage("Account Deleted!", 2, 23);
+                    }
+                    retry = display.PromptMessage("Delete another account", 2, 24);
+                } else
+                {
                     retry = display.PromptMessage("Retry", 2, 10);
-                }
-                else
-                {
-                    if (!input.ValidateLength(accountNumber, 10))
-                    {
-                        display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", 2, 9);
-                        retry = display.PromptMessage("Retry", 2, 10);
-                    }
-                    else
-                    {
-                        if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
-                        {
-                            display.SearchSuccessScreen();
-                            display.DisplayDetails(accountNumber, 12);
-                            display.AddBox(3, 60, 22);
-                            bool delete = display.PromptMessage("Delete", 2, 23);
-                            if (delete)
-                            {
-                                File.Delete($@"{directory}\\Accounts\\{accountNumber}.txt");
-                                display.SuccessMessage("Account Deleted!", 2, 23);
-                                retry = display.PromptMessage("Delete another account", 2, 24);
-                            } else
-                            {
-                                retry = display.PromptMessage("Delete another account", 2, 24);
-                            }
-                        }
-                        else
-                        {
-                            display.ErrorMessage("Account File Not Found!", 2, 9);
-                            retry = display.PromptMessage("Retry", 2, 10);
-                        }
-                    }
                 }
             }
         }
 
+        public bool FindAccount(string accountNumber, int x, int y)
+        {
+            if (!input.ValidateInt(accountNumber))
+            {
+                display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", x, y);
+                return false;
+            }
+            else
+            {
+                if (!input.ValidateLength(accountNumber, 10))
+                {
+                    display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", x, y);
+                    return false;
+                }
+                else
+                {
+                    if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        display.ErrorMessage("Account File Not Found!", x, y);
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }
 

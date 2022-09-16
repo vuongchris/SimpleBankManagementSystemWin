@@ -4,4 +4,8 @@ Address|29 Nichols Ave, Revesby NSW 2212
 Phone|0469849320
 Email|vngchris3@gmail.com
 Account|100001
-Balance|0
+Balance|8000
+16/09/2022 19:33:08|Deposit|1000|1000
+16/09/2022 19:33:33|Deposit|9000|10000
+16/09/2022 20:51:44|Withdraw|5000|5000
+16/09/2022 20:53:11|Deposit|3000|8000

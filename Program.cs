@@ -11,6 +11,7 @@ namespace SimpleBankManagementSystemWin
             Login login = new Login();
             Menu menu = new Menu();
 
+
             bool exitApp = false;
             while (!exitApp)
             {
