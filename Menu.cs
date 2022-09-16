@@ -113,33 +113,17 @@ namespace SimpleBankManagementSystemWin
                 display.SearchScreen();
                 accountNumber = input.StringInput(22, 6);
                 display.AddBox(3, 60, 8);
-                if (!input.ValidateInt(accountNumber))
+                bool foundAccount = FindAccount(accountNumber, 2, 9);
+                if (foundAccount)
                 {
-                    display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", 2, 9);
-                    retry = display.PromptMessage("Retry", 2, 10);
-                } 
+                    display.SearchSuccessScreen();
+                    display.DisplayDetails(accountNumber, 12);
+                    display.AddBox(2, 60, 22);
+                    retry = display.PromptMessage("Check another account", 2, 23);
+                }
                 else
                 {
-                    if (!input.ValidateLength(accountNumber, 10))
-                    {
-                        display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", 2, 9);
-                        retry = display.PromptMessage("Retry", 2, 10);
-                    }
-                    else
-                    {
-                        if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
-                        {
-                            display.SearchSuccessScreen();
-                            display.DisplayDetails(accountNumber, 12);
-                            display.AddBox(2, 60, 22);
-                            retry = display.PromptMessage("Check another account", 2, 23);
-                        }
-                        else
-                        {
-                            display.ErrorMessage("Account File Not Found!", 2, 9);
-                            retry = display.PromptMessage("Retry", 2, 10);
-                        }
-                    }
+                    retry = display.PromptMessage("Retry", 2, 10);
                 }
             }
         }
@@ -152,49 +136,37 @@ namespace SimpleBankManagementSystemWin
                 display.DepositScreen();
                 accountNumber = input.StringInput(22, 6);
                 display.AddBox(3, 60, 9);
-                if (!input.ValidateInt(accountNumber))
+                bool foundAccount = FindAccount(accountNumber, 2, 9);
+                if (foundAccount)
                 {
-                    display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", 2, 10);
-                    retry = display.PromptMessage("Retry", 2, 11);
-                } else
-                {
-                    if (!input.ValidateLength(accountNumber,10))
+                    display.SuccessMessage("Account Found! Enter amount", 2, 10);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    account = new Account(accountNumber);
+                    string stringBalance = input.StringInput(22, 7);
+                    if (!input.ValidateDouble(stringBalance))
                     {
-                        display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", 2, 10);
+                        display.ErrorMessage("Invalid Amount! Must be numbers only (0-9)", 2, 10);
                         retry = display.PromptMessage("Retry", 2, 11);
-                    } else
+                    }
+                    else
                     {
-                        if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+                        double balance = Convert.ToDouble(stringBalance);
+                        if (balance <= 0)
                         {
-                            display.SuccessMessage("Account Found! Enter amount", 2, 10);
-                            Console.ForegroundColor = ConsoleColor.White;
-                            account = new Account(accountNumber);
-                            string stringBalance = input.StringInput(22, 7);
-                            if (!input.ValidateDouble(stringBalance))
-                            {
-                                display.ErrorMessage("Invalid Amount! Must be numbers only (0-9)", 2, 10);
-                                retry = display.PromptMessage("Retry", 2, 11);
-                            } else
-                            {
-                                double balance = Convert.ToDouble(stringBalance);
-                                if (balance <= 0)
-                                {
-                                    display.ErrorMessage("Deposit Amount Cannot Be 0 or Negative!", 2, 10);
-                                    retry = display.PromptMessage("Retry", 2, 11);
-                                } else
-                                {
-                                    account.Deposit(balance);
-                                    display.SuccessMessage("Deposit Successful!", 2, 10);
-                                    retry = display.PromptMessage("Deposit another account", 2, 11);
-                                }
-                            }
+                            display.ErrorMessage("Deposit Amount Cannot Be 0 or Negative!", 2, 10);
+                            retry = display.PromptMessage("Retry", 2, 11);
                         }
                         else
                         {
-                            display.ErrorMessage("Account File Not Found!", 2, 10);
-                            retry = display.PromptMessage("Retry", 2, 11);
+                            account.Deposit(balance);
+                            display.SuccessMessage("Deposit Successful!", 2, 10);
+                            retry = display.PromptMessage("Deposit another account", 2, 11);
                         }
                     }
+                }
+                else
+                {
+                    retry = display.PromptMessage("Retry", 2, 10);
                 }
             }
         }
@@ -204,63 +176,48 @@ namespace SimpleBankManagementSystemWin
             bool retry = true;
             while (retry)
             {
-                display.DepositScreen();
+                display.WithdrawScreen();
                 accountNumber = input.StringInput(22, 6);
                 display.AddBox(3, 60, 9);
-                if (!input.ValidateInt(accountNumber))
+                bool foundAccount = FindAccount(accountNumber, 2, 9);
+                if (foundAccount)
                 {
-                    display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", 2, 10);
-                    retry = display.PromptMessage("Retry", 2, 11);
-                }
-                else
-                {
-                    if (!input.ValidateLength(accountNumber, 10))
+                    display.SuccessMessage("Account Found! Enter amount", 2, 10);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    account = new Account(accountNumber);
+                    string stringBalance = input.StringInput(22, 7);
+                    if (!input.ValidateDouble(stringBalance))
                     {
-                        display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", 2, 10);
+                        display.ErrorMessage("Invalid Amount! Must be numbers only (0-9)", 2, 10);
                         retry = display.PromptMessage("Retry", 2, 11);
                     }
                     else
                     {
-                        if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+                        double balance = Convert.ToDouble(stringBalance);
+                        if (balance <= 0)
                         {
-                            display.SuccessMessage("Account Found! Enter amount", 2, 10);
-                            Console.ForegroundColor = ConsoleColor.White;
-                            account = new Account(accountNumber);
-                            string stringBalance = input.StringInput(22, 7);
-                            if (!input.ValidateDouble(stringBalance))
+                            display.ErrorMessage("Withdraw Amount Cannot Be 0 or Negative!", 2, 10);
+                            retry = display.PromptMessage("Retry", 2, 11);
+                        }
+                        else
+                        {
+                            if (account.Balance - balance < 0)
                             {
-                                display.ErrorMessage("Invalid Amount! Must be numbers only (0-9)", 2, 10);
+                                display.ErrorMessage("Withdraw Failed! Unsufficient Funds To Withdraw", 2, 10);
                                 retry = display.PromptMessage("Retry", 2, 11);
                             }
                             else
                             {
-                                double balance = Convert.ToDouble(stringBalance);
-                                if (balance <= 0)
-                                {
-                                    display.ErrorMessage("Withdraw Amount Cannot Be 0 or Negative!", 2, 10);
-                                    retry = display.PromptMessage("Retry", 2, 11);
-                                }
-                                else
-                                {
-                                    if (account.Balance - balance < 0)
-                                    {
-                                        display.ErrorMessage("Withdraw Failed! Unsufficient Funds To Withdraw", 2, 10);
-                                        retry = display.PromptMessage("Retry", 2, 11);
-                                    } else
-                                    {
-                                        account.Withdraw(balance);
-                                        display.SuccessMessage("Withdraw Successful!", 2, 10);
-                                        retry = display.PromptMessage("Withdraw another account", 2, 11);
-                                    }
-                                }
+                                account.Withdraw(balance);
+                                display.SuccessMessage("Withdraw Successful!", 2, 10);
+                                retry = display.PromptMessage("Withdraw another account", 2, 11);
                             }
                         }
-                        else
-                        {
-                            display.ErrorMessage("Account File Not Found!", 2, 10);
-                            retry = display.PromptMessage("Retry", 2, 11);
-                        }
                     }
+                }
+                else
+                {
+                    retry = display.PromptMessage("Retry", 2, 10);
                 }
             }
         }
