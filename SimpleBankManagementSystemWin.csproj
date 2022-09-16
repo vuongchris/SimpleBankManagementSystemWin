@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Account.cs" />
     <Compile Include="Display.cs" />
+    <Compile Include="Email.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="Menu.cs" />

@@ -7,6 +7,7 @@ namespace SimpleBankManagementSystemWin
     {
         Account account;
         Display display;
+        Email email;
         Input input;
         string directory;
         string accountNumber;
@@ -14,6 +15,7 @@ namespace SimpleBankManagementSystemWin
         public Menu()
         {
             display = new Display();
+            email = new Email();
             input = new Input();
             directory = Directory.GetCurrentDirectory();
         }
@@ -293,7 +295,17 @@ namespace SimpleBankManagementSystemWin
                             display.AddBox(1, 60, 12);
                             display.CentreText("ACCOUNT STATEMENT", 60, 13);
                             display.DisplayDetails(accountNumber, 14);
-                            retry = display.PromptMessage("Retry", 2, 25);
+                            display.AddBox(3, 60, 24);
+                            bool sendEmail = display.PromptMessage("Send statement to Email", 2, 25);
+                            if (sendEmail)
+                            {
+                                email.sendEmail(accountNumber);
+                                retry = display.PromptMessage("Check another account", 2, 26);
+                            }
+                            else
+                            {
+                                retry = display.PromptMessage("Check another account", 2, 26);
+                            }
                         }
                         else
                         {

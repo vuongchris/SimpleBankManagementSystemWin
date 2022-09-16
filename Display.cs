@@ -290,6 +290,7 @@ namespace SimpleBankManagementSystemWin
 
         public void Message(string s, int x, int y)
         {
+            ClearAt(y, 1, 60);
             Console.ForegroundColor = ConsoleColor.White;
             WriteAt(s, x, y);
         }
