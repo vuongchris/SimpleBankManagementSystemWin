@@ -3,52 +3,50 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SimpleBankManagementSystem
+namespace SimpleBankManagementSystemWin
 {
     class Account
     {
-        string firstName, lastName, address, phoneNumber, emailAddress;
-        int accountNumber, counter;
+        string firstName, lastName, address, phoneNumber, emailAddress, accountNumber, directory;
+        int counter;
         double balance;
         List<(DateTime, string, double, double)> transactionHistory;
+        Display display;
 
-        public Account()
+        public Account(string account)
         {
-
-        }
-
-        public Account(int accountNumber)
-        {
+            display = new Display();
+            directory = Directory.GetCurrentDirectory();
             transactionHistory = new List<(DateTime date, string transactionType, double transactionAmount, double totalBalance)>();
             counter = 0;
-            foreach (string line in System.IO.File.ReadLines($"/Accounts/{accountNumber}.txt"))
+            foreach (string line in File.ReadLines($@"{directory}\\Accounts\\{account}.txt"))
             {
                 string[] elements = line.Split(new char[] { '|' }, StringSplitOptions.None);
                 switch (counter)
                 {
                     case 0:
-                        this.firstName = elements[1];
+                        firstName = elements[1];
                         break;
                     case 1:
-                        this.lastName = elements[1];
+                        lastName = elements[1];
                         break;
                     case 2:
-                        this.address = elements[1];
+                        address = elements[1];
                         break;
                     case 3:
-                        this.phoneNumber = elements[1];
+                        phoneNumber = elements[1];
                         break;
                     case 4:
-                        this.emailAddress = elements[1];
+                        emailAddress = elements[1];
                         break;
                     case 5:
-                        this.accountNumber = Convert.ToInt32(elements[1]);
+                        accountNumber = elements[1];
                         break;
                     case 6:
-                        this.balance = Convert.ToDouble(elements[1]);
+                        balance = Convert.ToDouble(elements[1]);
                         break;
                     default:
-                        transactionHistory.Add((Convert.ToDateTime(elements[0]), elements[1], Convert.ToDouble(elements[2]), Convert.ToDouble(elements[3])));
+                        transactionHistory.Add((DateTime.Parse(elements[0]), elements[1], Convert.ToDouble(elements[2]), Convert.ToDouble(elements[3])));
                         break;
                 }
                 counter++;
@@ -60,20 +58,15 @@ namespace SimpleBankManagementSystem
         {
             balance += amount;
             WriteTransaction("Deposit", amount, balance);
+            UpdateAccountFile();
         }
 
         // Withdraw amount specified by user into customer's account
         public void Withdraw(double amount)
         {
-            if ((balance - amount) < 0)
-            {
-                /// Error Message
-            }
-            else
-            {
-                balance -= amount;
-                WriteTransaction("Withdraw", amount, balance);
-            }
+            balance -= amount;
+            WriteTransaction("Withdraw", amount, balance);
+            UpdateAccountFile();
         }
 
         // Write transaction details into transaction history array
@@ -81,6 +74,71 @@ namespace SimpleBankManagementSystem
         {
             DateTime currentDate = DateTime.Now;
             transactionHistory.Add((currentDate, transactionType, amount, balance));
+        }
+
+        public void UpdateAccountFile()
+        {
+            string[] lines = {
+                $"First Name|{firstName}", $"Last Name|{lastName}", $"Address|{address}", $"Phone|{phoneNumber}", $"Email|{emailAddress}", $"Account|{accountNumber}", $"Balance|{balance}"
+            };
+
+            File.WriteAllLines($@"{directory}\\Accounts\\{accountNumber}.txt", lines);
+            
+            using (StreamWriter sw = File.AppendText($@"{directory}\\Accounts\\{accountNumber}.txt")) 
+            {
+                for (int i = 0; i < transactionHistory.Count; i++)
+                {
+                    sw.WriteLine($"{transactionHistory[i].Item1}|{transactionHistory[i].Item2}|{transactionHistory[i].Item3}|{transactionHistory[i].Item4}");
+                }
+            }
+        }
+
+        public void LastFiveTransactions()
+        {
+            int total = transactionHistory.Count;
+
+        }
+
+        public string FirstName
+        {
+            get { return firstName; }
+            set { firstName = value; }
+        }
+
+        public string LastName
+        {
+            get { return lastName; }
+            set { lastName = value; }
+        }
+
+        public string Address
+        {
+            get { return address; }
+            set { address = value; }
+        }
+
+        public string PhoneNumber
+        {
+            get { return phoneNumber; }
+            set { phoneNumber = value; }
+        }
+
+        public string EmailAddress
+        {
+            get { return emailAddress; }
+            set { emailAddress = value; }
+        }
+
+        public string AccountNumber
+        {
+            get { return accountNumber; }
+            set { accountNumber = value; }
+        }
+
+        public double Balance
+        {
+            get { return balance; }
+            set { balance = value; }
         }
     }
 }

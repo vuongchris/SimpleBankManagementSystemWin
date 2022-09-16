@@ -3,45 +3,33 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SimpleBankManagementSystem
+namespace SimpleBankManagementSystemWin
 {
     public class Login
     {
         string username, password;
-        ConsoleKey key;
+        Display display;
+        Input input;
 
         public Login()
         {
-
+            display = new Display();
+            input = new Input();
         }
 
-        public string EnterUsername()
+        public void UserLogin()
         {
-            Console.SetCursorPosition(16, 6);
-            username = Console.ReadLine();
-            return username;
-        }
+            display.LoginScreen();
+            username = input.StringInput(12, 6);
+            password = input.PasswordInput(12, 7);
 
-        public string EnterPassword()
-        {
-            Console.SetCursorPosition(16, 7);
-            password = "";
-            do
+            while (!CheckCredentials(username, password))
             {
-                var keyPressed = Console.ReadKey(true);
-                key = keyPressed.Key;
-                if (key == ConsoleKey.Backspace && password.Length > 0)
-                {
-                    Console.Write("\b \b");
-                    password = password.Remove(password.Length - 1);
-                }
-                else if (!Char.IsControl(keyPressed.KeyChar))
-                {
-                    Console.Write("*");
-                    password += keyPressed.KeyChar;
-                }
-            } while (key != ConsoleKey.Enter);
-            return password;
+                display.LoginFailError();
+                username = input.StringInput(12, 6);
+                password = input.PasswordInput(12, 7);
+            }
+            display.LoginSuccessMessage();
         }
 
         public bool CheckCredentials(string inputUsername, string inputPassword)

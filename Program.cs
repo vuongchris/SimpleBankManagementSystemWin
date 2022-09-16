@@ -1,64 +1,49 @@
 ﻿using System;
 
-namespace SimpleBankManagementSystem
+namespace SimpleBankManagementSystemWin
 {
     class Program
     {
         static void Main(string[] args)
         {
             Display display = new Display();
+            Input input = new Input();
             Login login = new Login();
             Menu menu = new Menu();
-            Validator validator = new Validator();
 
-            display.LoginScreen();
-            string username = login.EnterUsername();
-            string password = login.EnterPassword();
+            login.UserLogin();
 
-            while (!login.CheckCredentials(username, password))
-            {
-                display.LoginFailError();
-                username = login.EnterUsername();
-                password = login.EnterPassword();
-            }
-            display.LoginSuccessMessage();
-            display.MenuScreen();
             bool exitMenu = false;
             while (!exitMenu)
             {
                 display.MenuScreen();
-                string selection = menu.MenuSelection();
+                string selection = input.StringInput(41, 12);
                 switch (selection)
                 {
                     case "1":
-                        display.CreateAccountScreen();
                         menu.CreateAccount();
-                        display.CreateAccountConfirmation();
-                        Console.ReadKey();
-                        display.CreateSuccessScreen();
                         break;
                     case "2":
-                        display.SearchScreen();
-                        Console.ReadKey();
+                        menu.SearchAccount();
                         break;
                     case "3":
-                        display.DepositScreen();
-                        Console.ReadKey();
+                        menu.AccountDeposit();
                         break;
                     case "4":
-                        display.WithdrawScreen();
-                        Console.ReadKey();
+                        menu.AccountWithdraw();
                         break;
                     case "5":
-                        display.StatementScreen();
-                        Console.ReadKey();
+                        menu.AccountStatement();
                         break;
                     case "6":
                         display.DeleteAccountScreen();
                         Console.ReadKey();
                         break;
+                    case "7":
+                        display.ExitScreen();
+                        break;
                     default:
-                        selection = menu.MenuSelection();
+                        selection = input.StringInput(35, 12);
                         break;
                 }
             }

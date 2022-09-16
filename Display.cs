@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace SimpleBankManagementSystem
+namespace SimpleBankManagementSystemWin
 {
     public class Display
     {
-
         public Display()
         {
 
@@ -17,25 +16,25 @@ namespace SimpleBankManagementSystem
             Header("USER LOGIN", 60);
             AddBox(6, 60, 2);
             CentreText("Enter username and password", 60, 4);
-            WriteAt("Username:", 6, 6);
-            WriteAt("Password:", 6, 7);
+            WriteAt("Username:", 2, 6);
+            WriteAt("Password:", 2, 7);
         }
 
         public void LoginSuccessMessage()
         {
             AddBox(1, 60, 9);
             ClearAt(10, 1, 60);
-            SuccessMessage("Login Success! Press any key to continue...", 6, 10);
+            SuccessMessage("Login Success! Press any key to continue...", 2, 10);
             Console.ReadKey();
         }
 
         public void LoginFailError()
         {
             AddBox(1, 60, 9);
-            ClearAt(6, 16, 60);
-            ClearAt(7, 16, 60);
+            ClearAt(6, 12, 60);
+            ClearAt(7, 12, 60);
             ClearAt(10, 1, 60);
-            ErrorMessage("Incorrect Credentials, Please enter details again...", 6, 10);
+            ErrorMessage("Incorrect Credentials! Please enter details again...", 2, 10);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -44,14 +43,14 @@ namespace SimpleBankManagementSystem
             ClearScreen();
             Header("MAIN MENU", 60);
             AddBox(11, 60, 2);
-            WriteAt("1. Create a new account", 10, 4);
-            WriteAt("2. Search for an account", 10, 5);
-            WriteAt("3. Deposit", 10, 6);
-            WriteAt("4. Withdraw", 10, 7);
-            WriteAt("5. A/C statment", 10, 8);
-            WriteAt("6. Delete Account", 10, 9);
-            WriteAt("7. Exit", 10, 10);
-            WriteAt("Enter your choice (1-7):", 10, 12);
+            WriteAt("1. Create a new account", 16, 4);
+            WriteAt("2. Search for an account", 16, 5);
+            WriteAt("3. Deposit", 16, 6);
+            WriteAt("4. Withdraw", 16, 7);
+            WriteAt("5. A/C statment", 16, 8);
+            WriteAt("6. Delete Account", 16, 9);
+            WriteAt("7. Exit", 16, 10);
+            WriteAt("Enter your choice (1-7):", 16, 12);
         }
 
         public void CreateAccountScreen()
@@ -60,25 +59,22 @@ namespace SimpleBankManagementSystem
             Header("CREATE NEW ACCOUNT", 60);
             AddBox(9, 60, 2);
             CentreText("Enter details", 60, 4);
-            WriteAt("First Name:", 6, 6);
-            WriteAt("Last Name:", 6, 7);
-            WriteAt("Address:", 6, 8);
-            WriteAt("Phone:", 6, 9);
-            WriteAt("Email:", 6, 10);
+            WriteAt("First Name:", 2, 6);
+            WriteAt("Last Name:", 2, 7);
+            WriteAt("Address:", 2, 8);
+            WriteAt("Phone:", 2, 9);
+            WriteAt("Email:", 2, 10);
         }
 
-        public void CreateAccountConfirmation()
+        public void CreateSuccessScreen(int accountNumber)
         {
-            AddBox(1, 60, 12);
-            PromptMessage("Is the information correct", 6, 13);
-        }
-
-        public void CreateSuccessScreen()
-        {
-            AddBox(3, 60, 14);
-            SuccessMessage("Account Created! Details will be provided via email.", 6, 15);
-            SuccessMessage("Account Number:", 6, 16);
-            SuccessMessage("Press any key to continue...", 6, 17);
+            AddBox(3, 60, 12);
+            ClearAt(13, 1, 60);
+            ClearAt(14, 1, 60);
+            ClearAt(15, 1, 60);
+            SuccessMessage("Account Created! Details will be provided via email.", 2, 13);
+            Message($"Account Number: {accountNumber}", 2, 14);
+            Message("Press any key to return to Main Menu...", 2, 15);
             Console.ReadKey();
         }
 
@@ -88,35 +84,44 @@ namespace SimpleBankManagementSystem
             Header("SEARCH FOR ACCOUNT", 60);
             AddBox(5, 60, 2);
             CentreText("Enter account number", 60, 4);
-            WriteAt("Account Number:", 6, 6);
+            WriteAt("Account Number:", 2, 6);
 
-        }
-
-        public void SearchFailError()
-        {
-            AddBox(2, 60, 8);
-            ErrorMessage("Account Not Found!", 6, 9);
-            PromptMessage("Check another account", 6, 10);
         }
 
         public void SearchSuccessScreen()
         {
-            AddBox(2, 60, 8);
-            SuccessMessage("Account Found!", 6, 9);
-            SuccessMessage("Account details are shown below.", 6, 10);
+            AddBox(3, 60, 8);
+            SuccessMessage("Account Found!", 2, 9);
+            SuccessMessage("Account details are shown below.", 2, 10);
         }
 
-        public void DisplayDetails()
+        public void ContinueMessage(int x, int y)
         {
+            ClearAt(y, 1, 60);
+            WriteAt("Press any key to continue...", x, y);
+            Console.ReadKey();
+        }
+
+        public void DisplayDetails(string accountNumber, int y)
+        {
+            Account account = new Account(accountNumber);
             Console.ForegroundColor = ConsoleColor.White;
-            AddBox(9, 60, 11);
-            WriteAt("Account No:", 6, 13);
-            WriteAt("Account Balance:", 6, 14);
-            WriteAt("First Name:", 6, 15);
-            WriteAt("Last Name:", 6, 16);
-            WriteAt("Address:", 6, 17);
-            WriteAt("Phone:", 6, 18);
-            WriteAt("Email:", 6, 19);
+            AddBox(9, 60, y);
+            WriteAt($"Account No: {account.AccountNumber}", 2, y + 2);
+            WriteAt($"Account Balance: ${account.Balance}", 2, y + 3);
+            WriteAt($"First Name: {account.FirstName}", 2, y + 4);
+            WriteAt($"Last Name: {account.LastName}", 2, y + 5);
+            WriteAt($"Address: {account.Address}", 2, y + 6);
+            WriteAt($"Phone: {account.PhoneNumber}", 2, y + 7);
+            WriteAt($"Email: {account.EmailAddress}", 2, y + 8);
+        }
+
+
+        public void DisplayTransactions(string accountNumber)
+        {
+            Account account = new Account(accountNumber);
+            Console.ForegroundColor = ConsoleColor.White;
+
         }
 
         public void DepositScreen()
@@ -125,8 +130,8 @@ namespace SimpleBankManagementSystem
             Header("DEPOSIT", 60);
             AddBox(6, 60, 2);
             CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 6, 6);
-            WriteAt("Amount:", 6, 7);
+            WriteAt("Account Number:", 2, 6);
+            WriteAt("Amount: $", 2, 7);
         }
 
         public void EnterAmountMessage()
@@ -152,8 +157,8 @@ namespace SimpleBankManagementSystem
             Header("WITHDRAW", 60);
             AddBox(6, 60, 2);
             CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 6, 6);
-            WriteAt("Amount: $", 6, 7);
+            WriteAt("Account Number:", 2, 6);
+            WriteAt("Amount: $", 2, 7);
         }
 
         public void WithdrawSuccessScreen()
@@ -172,7 +177,7 @@ namespace SimpleBankManagementSystem
             Header("STATEMENT", 60);
             AddBox(5, 60, 2);
             CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 6, 6);
+            WriteAt("Account Number:", 2, 6);
         }
 
         public void StatementError(string error)
@@ -186,7 +191,6 @@ namespace SimpleBankManagementSystem
         {
             AddBox(2, 60, 8);
             SuccessMessage("Account Found! Statement is displayed below...", 2, 9);
-            DisplayDetails();
             AddBox(1, 60, 21);
             PromptMessage("Email Statement", 6, 10);
         }
@@ -197,16 +201,25 @@ namespace SimpleBankManagementSystem
             Header("DELETE ACCOUNT", 60);
             AddBox(5, 60, 2);
             CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 6, 6);
+            WriteAt("Account Number:", 2, 6);
         }
 
         public void DeleteSuccessScreen()
         {
             AddBox(2, 60, 8);
             SuccessMessage("Account Found! Details are displayed below...", 2, 9);
-            DisplayDetails();
             AddBox(1, 60, 21);
-            PromptMessage("Delete", 6, 10);
+            PromptMessage("Delete", 2, 10);
+        }
+
+        public void ExitScreen()
+        {
+            ClearScreen();
+            Header("EXIT OPTIONS", 60);
+            WriteAt("1. Logout", 10, 4);
+            WriteAt("2. Return to Main Menu", 10, 5);
+            WriteAt("3. Exit Application", 10, 6);
+            WriteAt("Enter your choice (1-3):", 10, 8);
         }
 
         public void Header(string s, int width)
@@ -228,20 +241,56 @@ namespace SimpleBankManagementSystem
 
         public void SuccessMessage(string s, int x, int y)
         {
+            ClearAt(y, 1, 60);
             Console.ForegroundColor = ConsoleColor.Green;
             WriteAt(s, x, y);
         }
 
         public void ErrorMessage(string s, int x, int y)
         {
+            ClearAt(y, 1, 60);
             Console.ForegroundColor = ConsoleColor.Red;
             WriteAt(s, x, y);
         }
 
-        public void PromptMessage(string s, int x, int y)
+        public bool PromptMessage(string s, int x, int y)
+        {
+            bool valid = false;
+            ClearAt(y, 1, 60);
+            Console.ForegroundColor = ConsoleColor.White;
+            WriteAt($"{s} (y/n)? ", x, y);
+            string selection = Console.ReadLine();
+            while (!valid)
+            {
+                if (selection == "y" || selection == "n")
+                {
+                    break;
+                }
+                else
+                {
+                    ErrorMessage("Invalid Character! Please input (y/n)", x, y + 1);
+                    ClearAt(y, 1, 60);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    WriteAt($"{s} (y/n)? ", x, y);
+                    selection = Console.ReadLine();
+                }
+            }
+            ContinueMessage(x, y + 1);
+            if (selection == "y")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public void Message(string s, int x, int y)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            WriteAt($"{s} (y/n)?", x, y);
+            WriteAt(s, x, y);
         }
 
         public void Box(int height, int width)
@@ -330,6 +379,8 @@ namespace SimpleBankManagementSystem
                 Console.WriteLine(e.Message);
             }
         }
+
+
     }
 }
 
