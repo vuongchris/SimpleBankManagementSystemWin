@@ -216,9 +216,10 @@ namespace SimpleBankManagementSystemWin
         {
             ClearScreen();
             Header("EXIT OPTIONS", 60);
+            AddBox(7, 60, 2);
             WriteAt("1. Logout", 10, 4);
-            WriteAt("2. Return to Main Menu", 10, 5);
-            WriteAt("3. Exit Application", 10, 6);
+            WriteAt("2. Exit Application", 10, 5);
+            WriteAt("3. Return to Main Menu", 10, 6);
             WriteAt("Enter your choice (1-3):", 10, 8);
         }
 

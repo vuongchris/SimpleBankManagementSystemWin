@@ -307,20 +307,50 @@ namespace SimpleBankManagementSystemWin
 
         public void DeleteAccount()
         {
-            string accountNumber = "0";
-            if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+            bool retry = true;
+            while (retry)
             {
-
+                display.DeleteAccountScreen();
+                accountNumber = input.StringInput(22, 6);
+                display.AddBox(3, 60, 8);
+                if (!input.ValidateInt(accountNumber))
+                {
+                    display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", 2, 9);
+                    retry = display.PromptMessage("Retry", 2, 10);
+                }
+                else
+                {
+                    if (!input.ValidateLength(accountNumber, 10))
+                    {
+                        display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", 2, 9);
+                        retry = display.PromptMessage("Retry", 2, 10);
+                    }
+                    else
+                    {
+                        if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+                        {
+                            display.SearchSuccessScreen();
+                            display.DisplayDetails(accountNumber, 12);
+                            display.AddBox(3, 60, 22);
+                            bool delete = display.PromptMessage("Delete", 2, 23);
+                            if (delete)
+                            {
+                                File.Delete($@"{directory}\\Accounts\\{accountNumber}.txt");
+                                display.SuccessMessage("Account Deleted!", 2, 23);
+                                retry = display.PromptMessage("Delete another account", 2, 24);
+                            } else
+                            {
+                                retry = display.PromptMessage("Delete another account", 2, 24);
+                            }
+                        }
+                        else
+                        {
+                            display.ErrorMessage("Account File Not Found!", 2, 9);
+                            retry = display.PromptMessage("Retry", 2, 10);
+                        }
+                    }
+                }
             }
-            else
-            {
-                // Error Message
-            }
-        }
-
-        public void Exit()
-        {
-
         }
 
     }

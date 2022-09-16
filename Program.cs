@@ -11,43 +11,60 @@ namespace SimpleBankManagementSystemWin
             Login login = new Login();
             Menu menu = new Menu();
 
-            login.UserLogin();
-
-            bool exitMenu = false;
-            while (!exitMenu)
+            bool exitApp = false;
+            while (!exitApp)
             {
-                display.MenuScreen();
-                string selection = input.StringInput(41, 12);
-                switch (selection)
+                login.UserLogin();
+                bool exitMenu = false;
+                while (!exitMenu)
                 {
-                    case "1":
-                        menu.CreateAccount();
-                        break;
-                    case "2":
-                        menu.SearchAccount();
-                        break;
-                    case "3":
-                        menu.AccountDeposit();
-                        break;
-                    case "4":
-                        menu.AccountWithdraw();
-                        break;
-                    case "5":
-                        menu.AccountStatement();
-                        break;
-                    case "6":
-                        display.DeleteAccountScreen();
-                        Console.ReadKey();
-                        break;
-                    case "7":
-                        display.ExitScreen();
-                        break;
-                    default:
-                        selection = input.StringInput(35, 12);
-                        break;
+                    display.MenuScreen();
+                    string selection = input.StringInput(41, 12);
+                    switch (selection)
+                    {
+                        case "1":
+                            menu.CreateAccount();
+                            break;
+                        case "2":
+                            menu.SearchAccount();
+                            break;
+                        case "3":
+                            menu.AccountDeposit();
+                            break;
+                        case "4":
+                            menu.AccountWithdraw();
+                            break;
+                        case "5":
+                            menu.AccountStatement();
+                            break;
+                        case "6":
+                            menu.DeleteAccount();
+                            break;
+                        case "7":
+                            display.ExitScreen();
+                            string exitSelection = input.StringInput(35, 8);
+                            switch (exitSelection)
+                            {
+                                case "1":
+                                    exitMenu = true;
+                                    break;
+                                case "2":
+                                    exitMenu = true;
+                                    exitApp = true;
+                                    break;
+                                case "3":
+                                    break;
+                                default:
+                                    exitSelection = input.StringInput(35, 8);
+                                    break;
+                            }
+                            break;
+                        default:
+                            selection = input.StringInput(35, 12);
+                            break;
+                    }
                 }
             }
-
         }
     }
 }
