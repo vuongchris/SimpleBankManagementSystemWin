@@ -17,19 +17,21 @@ namespace SimpleBankManagementSystemWin
             input = new Input();
         }
 
-        public void UserLogin()
+        public void UserLogin(int x, int y, int width)
         {
-            display.LoginScreen();
-            username = input.StringInput(12, 6);
-            password = input.PasswordInput(12, 7);
+            display.LoginScreen(x, y, width);
+            username = input.StringInput(x + 12, y + 6, width);
+            password = input.PasswordInput(x + 12, y + 7, width);
 
             while (!CheckCredentials(username, password))
             {
-                display.LoginFailError();
-                username = input.StringInput(12, 6);
-                password = input.PasswordInput(12, 7);
+                display.LoginFailError(x, y + 9, width);
+                display.ClearAt(x + 12, y + 6, width - x - 13);
+                display.ClearAt(x + 12, y + 7, width - x - 13);
+                username = input.StringInput(x + 12, y + 6, width);
+                password = input.PasswordInput(x + 12, y + 7, width);
             }
-            display.LoginSuccessMessage();
+            display.LoginSuccessMessage(x, y + 9, width);
         }
 
         public bool CheckCredentials(string inputUsername, string inputPassword)

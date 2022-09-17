@@ -1,1 +1,2 @@
-admin|admin
+admin|admin5678
+guest|pass1234

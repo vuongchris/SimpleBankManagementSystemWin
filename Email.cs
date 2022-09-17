@@ -14,15 +14,24 @@ namespace SimpleBankManagementSystemWin
         MailMessage message;
         SmtpClient smtp;
         List<(DateTime, string, double, double)> transactionHistory;
+
         public Email()
         {
             display = new Display();
         }
 
-        public void sendEmail(string accountNumber)
+        /// <summary>
+        /// Sends an email to Account 
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        public void sendEmail(string accountNumber, int x, int y, int width)
         {
-            display.Message("Sending Email...", 2, 25);
-            display.ClearAt(26, 1, 60);
+            display.ClearAt(x, y, width - 3);
+            display.ClearAt(x, y + 1, width - 3);
+            display.Message("Sending Email...", x, y, width);
             try
             {
                 account = new Account(accountNumber);
@@ -43,30 +52,37 @@ namespace SimpleBankManagementSystemWin
                 message.Body = emailTemplate(accountNumber);
                 smtp.Send(message);
 
-            } catch (Exception ex)
-            {
-                display.ErrorMessage("Email Could Not Be Sent!", 2, 25);
             }
-            display.SuccessMessage("Email Sent Successfully!", 2, 25);
+            catch (Exception ex)
+            {
+                display.ErrorMessage("Email Could Not Be Sent!", x, y, width);
+            }
+            display.ClearAt(x, y, width - 3);
+            display.SuccessMessage("Email Sent Successfully!", x, y, width);
         }
 
+        /// <summary>
+        /// Template for account statement
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <returns></returns>
         public string emailTemplate(string accountNumber)
         {
             account = new Account(accountNumber);
             transactionHistory = account.TransactionHistory;
-            string messageBody = 
-                $"<h1>Account Statement</h1><br>" + 
-                $"<p>Account No: {account.AccountNumber}</p>" + 
-                $"<p>Account Balance: ${account.Balance}</p>" + 
-                $"<p>First Name: {account.FirstName}</p>" + 
-                $"<p>Last Name: {account.LastName}</p>" + 
-                $"<p>Address: {account.Address}</p>" + 
-                $"<p>Phone: {account.PhoneNumber}</p>" + 
+            string messageBody =
+                $"<h1>Account Statement</h1><br>" +
+                $"<p>Account No: {account.AccountNumber}</p>" +
+                $"<p>Account Balance: ${account.Balance}</p>" +
+                $"<p>First Name: {account.FirstName}</p>" +
+                $"<p>Last Name: {account.LastName}</p>" +
+                $"<p>Address: {account.Address}</p>" +
+                $"<p>Phone: {account.PhoneNumber}</p>" +
                 $"<p>Email: {account.EmailAddress}</p><br>" +
-                $"<h2>Transaction History</h2>" + 
+                $"<h2>Transaction History</h2>" +
                 $"<table><tr><th>Date</th><th>Type</th><th>Amount</th><th>Balance</th></tr>";
 
-            foreach (var element in transactionHistory) 
+            foreach (var element in transactionHistory)
             {
                 messageBody += $"<tr><td>{element.Item1}</td><td>{element.Item2}</td><td>${element.Item3}</td><td>${element.Item4}</td></tr>";
             }
@@ -75,7 +91,5 @@ namespace SimpleBankManagementSystemWin
 
             return messageBody;
         }
-
-
     }
 }

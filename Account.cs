@@ -12,6 +12,10 @@ namespace SimpleBankManagementSystemWin
         double balance;
         List<(DateTime, string, double, double)> transactionHistory;
 
+        /// <summary>
+        /// Loads all data from Account file and stores in variables
+        /// </summary>
+        /// <param name="account"></param>
         public Account(string account)
         {
             directory = Directory.GetCurrentDirectory();
@@ -51,7 +55,10 @@ namespace SimpleBankManagementSystemWin
             }
         }
 
-        // Deposit amount specified by user into customer's account
+        /// <summary>
+        /// Deposit the amount inputted into user account
+        /// </summary>
+        /// <param name="amount"></param>
         public void Deposit(double amount)
         {
             balance += amount;
@@ -59,7 +66,10 @@ namespace SimpleBankManagementSystemWin
             UpdateAccountFile();
         }
 
-        // Withdraw amount specified by user into customer's account
+        /// <summary>
+        /// Withdraw the amount inputted into user account
+        /// </summary>
+        /// <param name="amount"></param>
         public void Withdraw(double amount)
         {
             balance -= amount;
@@ -67,13 +77,21 @@ namespace SimpleBankManagementSystemWin
             UpdateAccountFile();
         }
 
-        // Write transaction details into transaction history array
+        /// <summary>
+        /// Store transaction details into array
+        /// </summary>
+        /// <param name="transactionType"></param>
+        /// <param name="amount"></param>
+        /// <param name="balance"></param>
         public void WriteTransaction(string transactionType, double amount, double balance)
         {
             DateTime currentDate = DateTime.Now;
             transactionHistory.Add((currentDate, transactionType, amount, balance));
         }
 
+        /// <summary>
+        /// Updates Account File with new information
+        /// </summary>
         public void UpdateAccountFile()
         {
             string[] lines = {
@@ -81,8 +99,8 @@ namespace SimpleBankManagementSystemWin
             };
 
             File.WriteAllLines($@"{directory}\\Accounts\\{accountNumber}.txt", lines);
-            
-            using (StreamWriter sw = File.AppendText($@"{directory}\\Accounts\\{accountNumber}.txt")) 
+
+            using (StreamWriter sw = File.AppendText($@"{directory}\\Accounts\\{accountNumber}.txt"))
             {
                 for (int i = 0; i < transactionHistory.Count; i++)
                 {

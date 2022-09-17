@@ -15,15 +15,32 @@ namespace SimpleBankManagementSystemWin
         {
             display = new Display();
         }
-        public string StringInput(int x, int y)
+
+        /// <summary>
+        /// Used for inputting anything from the user
+        /// </summary>
+        /// <param name="x"> X Position of Cursor </param>
+        /// <param name="y"> Y Position of Cursor </param>
+        /// <param name="width"> Width of Box</param>
+        /// <returns> string </returns>
+        public string StringInput(int x, int y, int width)
         {
+            display.ClearAt(x, y, width - x - 3);
             Console.SetCursorPosition(x, y);
             string input = Console.ReadLine();
             return input;
         }
 
-        public string PasswordInput(int x, int y)
+        /// <summary>
+        /// Used for inputting passwords from the user
+        /// </summary>
+        /// <param name="x"> X Position of Cursor </param>
+        /// <param name="y"> Y Position of Cursor </param>
+        /// <param name="width"> Width of Box</param>
+        /// <returns> string </returns>
+        public string PasswordInput(int x, int y, int width)
         {
+            display.ClearAt(x, y, width - x - 3);
             Console.SetCursorPosition(x, y);
             string password = "";
             do
@@ -44,6 +61,12 @@ namespace SimpleBankManagementSystemWin
             return password;
         }
 
+        /// <summary>
+        /// Used to check the length of an input
+        /// </summary>
+        /// <param name="number"> Number input from user</param>
+        /// <param name="length"> Maximum length required</param>
+        /// <returns> bool </returns>
         public bool ValidateLength(string number, int length)
         {
             if (number.Length <= length)
@@ -57,6 +80,11 @@ namespace SimpleBankManagementSystemWin
 
         }
 
+        /// <summary>
+        /// Used to check if an email is the correct format
+        /// </summary>
+        /// <param name="email"> Email address input </param>
+        /// <returns> bool </returns>
         public bool ValidateEmail(string email)
         {
             for (int i = 0; i < email.Length; i++)
@@ -68,26 +96,28 @@ namespace SimpleBankManagementSystemWin
             }
             return true;
         }
-
+        
+        /// <summary>
+        /// Used to check if user input is an integer
+        /// </summary>
+        /// <param name="number"> Number input from user </param>
+        /// <returns> bool </returns>
         public bool ValidateInt(string number)
         {
             int defaultValue = -1;
             bool result = int.TryParse(number, out defaultValue);
-            if (!result)
-            {
-                /// Error Message
-            }
             return result;
         }
 
+        /// <summary>
+        /// Used to check if the user input is a double
+        /// </summary>
+        /// <param name="number"> Number input from user </param>
+        /// <returns> bool </returns>
         public bool ValidateDouble(string number)
         {
             double defaultValue = -1.00;
             bool result = double.TryParse(number, out defaultValue);
-            if (!result)
-            {
-                /// Error Message
-            }
             return result;
         }
 

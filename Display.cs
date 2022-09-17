@@ -4,127 +4,121 @@ using System.Data.Common;
 
 namespace SimpleBankManagementSystemWin
 {
+    /// <summary>
+    /// Console GUI for Application
+    /// </summary>
     public class Display
-    {
+    {   
         public Display()
         {
 
         }
 
-        public void LoginScreen()
+        public void LoginScreen(int x, int y, int width)
         {
             ClearScreen();
-            Header("USER LOGIN", 60);
-            AddBox(6, 60, 2);
-            CentreText("Enter username and password", 60, 4);
-            WriteAt("Username:", 2, 6);
-            WriteAt("Password:", 2, 7);
+            Header("USER LOGIN", x, y, 2, width);
+            AddBox(x, y + 2, 7, width);
+            CentreText("Enter username and password", x, y + 4, width);
+            WriteAt("Username:", x + 2, y + 6);
+            WriteAt("Password:", x + 2, y + 7);
         }
 
-        public void LoginSuccessMessage()
+        public void LoginSuccessMessage(int x, int y, int width)
         {
-            AddBox(1, 60, 9);
-            ClearAt(10, 1, 60);
-            SuccessMessage("Login Success! Press any key to continue...", 2, 10);
+            AddBox(x, y, 2, width);
+            SuccessMessage("Login Success! Press any key to continue...", x + 2, y + 1, width);
             Console.ReadKey();
         }
 
-        public void LoginFailError()
+        public void LoginFailError(int x, int y, int width)
         {
-            AddBox(1, 60, 9);
-            ClearAt(6, 12, 60);
-            ClearAt(7, 12, 60);
-            ClearAt(10, 1, 60);
-            ErrorMessage("Incorrect Credentials! Please enter details again...", 2, 10);
+            AddBox(x, y, 2, width);
+            ErrorMessage("Incorrect Credentials! Please enter details again...", x + 2, y + 1, width);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public void MenuScreen()
+        public void MenuScreen(int x, int y, int width)
+        {
+            int margin = x + ((width / 2) - (26 / 2));
+            ClearScreen();
+            Header("MAIN MENU", x, y, 2, width);
+            AddBox(x, y + 2, 11, width);
+            WriteAt("1. Create a new account", margin, y+4);
+            WriteAt("2. Search for an account", margin, y+5);
+            WriteAt("3. Deposit", margin, y+6);
+            WriteAt("4. Withdraw", margin, y+7);
+            WriteAt("5. A/C statment", margin, y+8);
+            WriteAt("6. Delete Account", margin, y+9);
+            WriteAt("7. Exit", margin, y+10);
+            WriteAt("Enter your choice (1-7):", margin, y+11);
+        }
+
+        public void CreateAccountScreen(int x, int y, int width)
         {
             ClearScreen();
-            Header("MAIN MENU", 60);
-            AddBox(11, 60, 2);
-            WriteAt("1. Create a new account", 16, 4);
-            WriteAt("2. Search for an account", 16, 5);
-            WriteAt("3. Deposit", 16, 6);
-            WriteAt("4. Withdraw", 16, 7);
-            WriteAt("5. A/C statment", 16, 8);
-            WriteAt("6. Delete Account", 16, 9);
-            WriteAt("7. Exit", 16, 10);
-            WriteAt("Enter your choice (1-7):", 16, 12);
+            Header("CREATE NEW ACCOUNT", x, y, 2, width);
+            AddBox(x, y + 2, 10, width);
+            CentreText("Enter details", x, y + 4, width);
+            WriteAt("First Name:", x + 2, y + 6);
+            WriteAt("Last Name:", x + 2, y + 7);
+            WriteAt("Address:", x + 2, y + 8);
+            WriteAt("Phone:", x + 2, y + 9);
+            WriteAt("Email:", x + 2, y + 10);
+        } 
+
+        public void CreateSuccessScreen(int accountNumber, int x, int y, int width)
+        {
+            AddBox(x, y, 6, width);
+            SuccessMessage("Account Created! Details will be provided via email.", 2, y+1,width);
+            Message($"Account Number: {accountNumber}", x+2, y+2, width);
         }
 
-        public void CreateAccountScreen()
+        public void SearchScreen(int x, int y, int width)
         {
             ClearScreen();
-            Header("CREATE NEW ACCOUNT", 60);
-            AddBox(9, 60, 2);
-            CentreText("Enter details", 60, 4);
-            WriteAt("First Name:", 2, 6);
-            WriteAt("Last Name:", 2, 7);
-            WriteAt("Address:", 2, 8);
-            WriteAt("Phone:", 2, 9);
-            WriteAt("Email:", 2, 10);
-        }
-
-        public void CreateSuccessScreen(int accountNumber)
-        {
-            AddBox(3, 60, 12);
-            ClearAt(13, 1, 60);
-            ClearAt(14, 1, 60);
-            ClearAt(15, 1, 60);
-            SuccessMessage("Account Created! Details will be provided via email.", 2, 13);
-            Message($"Account Number: {accountNumber}", 2, 14);
-            Message("Press any key to return to Main Menu...", 2, 15);
-            Console.ReadKey();
-        }
-
-        public void SearchScreen()
-        {
-            ClearScreen();
-            Header("SEARCH FOR ACCOUNT", 60);
-            AddBox(5, 60, 2);
-            CentreText("Enter account number", 60, 4);
-            WriteAt("Account Number:", 2, 6);
+            Header("SEARCH FOR ACCOUNT", x, y, 2, width);
+            AddBox(x, y + 2, 6, width);
+            CentreText("Enter account number", x, y + 4, width);
+            WriteAt("Account Number:", x + 2, y + 6);
 
         }
 
-        public void SearchSuccessScreen()
+        public void SearchSuccessScreen(int x, int y, int width)
         {
-            AddBox(3, 60, 8);
-            SuccessMessage("Account Found!", 2, 9);
-            SuccessMessage("Account details are shown below.", 2, 10);
+            SuccessMessage("Account Found!", x + 2, y, width);
+            SuccessMessage("Account details are shown below.", x + 2, y + 1, width);
         }
 
-        public void ContinueMessage(int x, int y)
+        public void ContinueMessage(int x, int y, int width)
         {
-            ClearAt(y, 1, 60);
+            ClearAt(x, y, width - 3);
             WriteAt("Press any key to continue...", x, y);
             Console.ReadKey();
         }
 
-        public void DisplayDetails(string accountNumber, int y)
+        public void DisplayDetails(string accountNumber, int x, int y, int width)
         {
             Account account = new Account(accountNumber);
             Console.ForegroundColor = ConsoleColor.White;
-            AddBox(9, 60, y);
-            WriteAt($"Account No: {account.AccountNumber}", 2, y + 2);
-            WriteAt($"Account Balance: ${account.Balance}", 2, y + 3);
-            WriteAt($"First Name: {account.FirstName}", 2, y + 4);
-            WriteAt($"Last Name: {account.LastName}", 2, y + 5);
-            WriteAt($"Address: {account.Address}", 2, y + 6);
-            WriteAt($"Phone: {account.PhoneNumber}", 2, y + 7);
-            WriteAt($"Email: {account.EmailAddress}", 2, y + 8);
+            AddBox(x, y, 10, width);
+            WriteAt($"Account No: {account.AccountNumber}", x + 2, y + 2);
+            WriteAt($"Account Balance: ${account.Balance}", x + 2, y + 3);
+            WriteAt($"First Name: {account.FirstName}", x + 2, y + 4);
+            WriteAt($"Last Name: {account.LastName}", x + 2, y + 5);
+            WriteAt($"Address: {account.Address}", x + 2, y + 6);
+            WriteAt($"Phone: {account.PhoneNumber}", x + 2, y + 7);
+            WriteAt($"Email: {account.EmailAddress}", x + 2, y + 8);
         }
 
 
-        public void DisplayTransactions(string accountNumber, int y)
+        public void DisplayTransactions(string accountNumber, int x, int y, int width)
         {
             int counter;
             Account account = new Account(accountNumber);
             Console.ForegroundColor = ConsoleColor.White;
-            AddBox(9, 60, y);
-            CentreText("Last 5 Transactions", 60, y + 2);
+            AddBox(x, y, 10, width);
+            CentreText("Last 5 Transactions", x, y + 2, width);
             List<(DateTime, string, double, double)> transactionHistory = account.TransactionHistory;
             transactionHistory.Reverse();
             if (transactionHistory.Count < 5)
@@ -136,118 +130,69 @@ namespace SimpleBankManagementSystemWin
             }
             for (int i = 0; i < counter; i++)
             {
-                WriteAt($"{transactionHistory[i].Item1} {transactionHistory[i].Item2} {transactionHistory[i].Item3} {transactionHistory[i].Item4}", 2, y + 4 + i);
+                WriteAt($"{transactionHistory[i].Item1} {transactionHistory[i].Item2} {transactionHistory[i].Item3} {transactionHistory[i].Item4}", x + 2, y + 4 + i);
             }
         }
 
-        public void DepositScreen()
+        public void DepositScreen(int x, int y, int width)
         {
             ClearScreen();
-            Header("DEPOSIT", 60);
-            AddBox(6, 60, 2);
-            CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 2, 6);
-            WriteAt("Amount: $", 2, 7);
+            Header("DEPOSIT", x, y, 2, width);
+            AddBox(x, y + 2, 7, width);
+            CentreText("Enter details", x, y + 4, width);
+            WriteAt("Account Number:", x + 2, y + 6);
+            WriteAt("Amount: $", x + 2, y + 7);
         }
 
-        public void EnterAmountMessage()
-        {
-            AddBox(2, 60, 9);
-            SuccessMessage("Account Found! Enter the amount...", 2, 10);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        public void DepositSuccessScreen()
-        {
-            SuccessMessage("Deposit Successful!", 2, 11);
-        }
-
-        public void DepositErrorMessage(string error)
-        {
-            ErrorMessage($"Deposit Failed! {error}", 2, 11);
-        }
-
-        public void WithdrawScreen()
+        public void WithdrawScreen(int x, int y, int width)
         {
             ClearScreen();
-            Header("WITHDRAW", 60);
-            AddBox(6, 60, 2);
-            CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 2, 6);
-            WriteAt("Amount: $", 2, 7);
+            Header("WITHDRAW", x, y, 2, width);
+            AddBox(x, y + 2, 7, width);
+            CentreText("Enter details", x, y + 4, width);
+            WriteAt("Account Number:", x + 2, y + 6);
+            WriteAt("Amount: $", x + 2, y + 7);
         }
 
-        public void WithdrawSuccessScreen()
-        {
-            SuccessMessage("Withdraw Successful!", 2, 11);
-        }
-
-        public void WithdrawErrorMessage(string error)
-        {
-            ErrorMessage($"Withdrawal Failed! {error}", 2, 11);
-        }
-
-        public void StatementScreen()
+        public void StatementScreen(int x, int y, int width)
         {
             ClearScreen();
-            Header("STATEMENT", 60);
-            AddBox(5, 60, 2);
-            CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 2, 6);
+            Header("STATEMENT", x, y, 2, width);
+            AddBox(x, y + 2, 6, width);
+            CentreText("Enter details", x, y + 4, width);
+            WriteAt("Account Number:", x + 2, y + 6);
         }
 
-        public void StatementError(string error)
-        {
-            AddBox(2, 60, 8);
-            ErrorMessage($"Account Not Found! {error}", 20, 9);
-        }
-
-
-        public void StatementSuccessScreen()
-        {
-            AddBox(2, 60, 8);
-            SuccessMessage("Account Found! Statement is displayed below...", 2, 9);
-            AddBox(1, 60, 21);
-            PromptMessage("Email Statement", 6, 10);
-        }
-
-        public void DeleteAccountScreen()
+        public void DeleteAccountScreen(int x, int y, int width)
         {
             ClearScreen();
-            Header("DELETE ACCOUNT", 60);
-            AddBox(5, 60, 2);
-            CentreText("Enter details", 60, 4);
-            WriteAt("Account Number:", 2, 6);
+            Header("DELETE ACCOUNT", x, y, 2, width);
+            AddBox(x, y + 2, 6, width);
+            CentreText("Enter details", x, y + 4, width);
+            WriteAt("Account Number:", x + 2, y + 6);
         }
 
-        public void DeleteSuccessScreen()
+        public void ExitScreen(int x, int y, int width)
         {
-            AddBox(2, 60, 8);
-            SuccessMessage("Account Found! Details are displayed below...", 2, 9);
-            AddBox(1, 60, 21);
-            PromptMessage("Delete", 2, 10);
-        }
-
-        public void ExitScreen()
-        {
+            int margin = x + ((width / 2) - (26 / 2));
             ClearScreen();
-            Header("EXIT OPTIONS", 60);
-            AddBox(7, 60, 2);
-            WriteAt("1. Logout", 10, 4);
-            WriteAt("2. Exit Application", 10, 5);
-            WriteAt("3. Return to Main Menu", 10, 6);
-            WriteAt("Enter your choice (1-3):", 10, 8);
+            Header("EXIT OPTIONS", x, y, 2, width);
+            AddBox(x, y + 2, 8, width);
+            WriteAt("1. Logout", margin, y + 4);
+            WriteAt("2. Exit Application", margin, y + 5);
+            WriteAt("3. Return to Main Menu", margin, y + 6);
+            WriteAt("Enter your choice (1-3):", margin, y + 8);
         }
 
-        public void Header(string s, int width)
+        public void Header(string s, int x, int y, int height, int width)
         {
-            Box(1, width);
-            WriteAt(s, (width / 2) - (s.Length / 2), 1);
+            Box(x, y, height, width);
+            CentreText(s, x, y + 1, width);
         }
 
-        public void CentreText(string s, int width, int row)
+        public void CentreText(string s, int x, int y, int width)
         {
-            WriteAt(s, (width / 2) - (s.Length / 2), row);
+            WriteAt(s, x + ((width / 2) - (s.Length / 2)), y);
         }
 
         public void ClearScreen()
@@ -256,24 +201,24 @@ namespace SimpleBankManagementSystemWin
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public void SuccessMessage(string s, int x, int y)
+        public void SuccessMessage(string s, int x, int y, int width)
         {
-            ClearAt(y, 1, 60);
+            ClearAt(x, y, width - 3);
             Console.ForegroundColor = ConsoleColor.Green;
             WriteAt(s, x, y);
         }
 
-        public void ErrorMessage(string s, int x, int y)
+        public void ErrorMessage(string s, int x, int y, int width)
         {
-            ClearAt(y, 1, 60);
+            ClearAt(x, y, width - 3);
             Console.ForegroundColor = ConsoleColor.Red;
             WriteAt(s, x, y);
         }
 
-        public bool PromptMessage(string s, int x, int y)
+        public bool PromptMessage(string s, int x, int y, int width)
         {
             bool valid = false;
-            ClearAt(y, 1, 60);
+            ClearAt(x,y,width - 3);
             Console.ForegroundColor = ConsoleColor.White;
             WriteAt($"{s} (y/n)? ", x, y);
             string selection = Console.ReadLine();
@@ -285,14 +230,14 @@ namespace SimpleBankManagementSystemWin
                 }
                 else
                 {
-                    ErrorMessage("Invalid Character! Please input (y/n)", x, y + 1);
+                    ErrorMessage("Invalid Character! Please input (y/n)", x, y + 1, width);
                     ClearAt(y, 1, 60);
                     Console.ForegroundColor = ConsoleColor.White;
                     WriteAt($"{s} (y/n)? ", x, y);
                     selection = Console.ReadLine();
                 }
             }
-            ContinueMessage(x, y + 1);
+            ContinueMessage(x, y + 1, width);
             if (selection == "y")
             {
                 return true;
@@ -304,66 +249,60 @@ namespace SimpleBankManagementSystemWin
 
         }
 
-        public void Message(string s, int x, int y)
+        public void Message(string s, int x, int y, int width)
         {
-            ClearAt(y, 1, 60);
+            ClearAt(x, y, width - 3);
             Console.ForegroundColor = ConsoleColor.White;
             WriteAt(s, x, y);
         }
 
-        public void Box(int height, int width)
+        public void Box(int x, int y, int height, int width)
         {
-            HorizontalLine(0, 1, width);
-            HorizontalLine(height + 1, 1, width);
-            VerticalLine(0, 1, height);
-            VerticalLine(width + 1, 1, height);
-            Corners(0, 0, width + 1, height + 1);
+            HorizontalLine(x + 1, y, width - 1);
+            HorizontalLine(x + 1, y + height, width - 1);
+            VerticalLine(x, y + 1, height - 1);
+            VerticalLine(x + width, y + 1, height - 1);
+            Corners(x, y, x+width, y+height);
 
         }
 
-        public void AddBox(int height, int width, int row)
+        public void AddBox(int x, int y, int height, int width)
         {
-            HorizontalLine(row, 1, width);
-            HorizontalLine(row + height + 1, 1, width);
-            VerticalLine(0, row + 1, row + height);
-            VerticalLine(width + 1, row + 1, row + height);
+            Box(x, y, height, width);
 
-            WriteAt("├", 0, row);
-            WriteAt("┤", width + 1, row);
-
-            WriteAt("└", 0, height + row + 1);
-            WriteAt("┘", width + 1, height + row + 1);
+            WriteAt("├", x, y);
+            WriteAt("┤", x + width, y);
         }
 
-        public void HorizontalLine(int row, int startCol, int endCol)
+        public void HorizontalLine(int x, int y, int width)
         {
-            for (int i = startCol; i <= endCol; i++)
+            for (int i = x; i <= x + width; i++)
             {
-                WriteAt("─", i, row);
+                WriteAt("─", i, y);
             }
         }
 
-        public void HorizontalLine(string s, int row, int startCol, int endCol)
+        public void HorizontalLine(string s, int x, int y, int width)
         {
-            for (int i = startCol; i <= endCol; i++)
+            for (int i = x; i <= x + width; i++)
             {
-                WriteAt(s, i, row);
+                WriteAt(s, i, y);
             }
         }
 
-        public void VerticalLine(int column, int startRow, int endRow)
+        public void VerticalLine(int x, int y, int height)
         {
-            for (int i = startRow; i <= endRow; i++)
+            for (int i = y; i <= y + height; i++)
             {
-                WriteAt("│", column, i);
+                WriteAt("│", x, i);
             }
         }
 
-        public void VerticalLine(string s, int column, int startRow, int endRow)
+        public void VerticalLine(string s, int x, int y, int height)
         {
-            for (int i = startRow; i <= endRow; i++)
+            for (int i = y; i <= y + height; i++)
             {
-                WriteAt(s, column, i);
+                WriteAt(s, x, i);
             }
         }
 
@@ -376,11 +315,11 @@ namespace SimpleBankManagementSystemWin
         }
 
 
-        public void ClearAt(int row, int startCol, int endCol)
+        public void ClearAt(int x, int y, int width)
         {
-            for (int i = startCol; i <= endCol; i++)
+            for (int i = x; i <= x + width; i++)
             {
-                WriteAt(" ", i, row);
+                WriteAt(" ", i, y);
             }
         }
 

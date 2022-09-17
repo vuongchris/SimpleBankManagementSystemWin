@@ -11,39 +11,42 @@ namespace SimpleBankManagementSystemWin
             Login login = new Login();
             Menu menu = new Menu();
 
+            int topLeftX = 0;
+            int topLeftY = 0;
+            int width = 62;
 
             bool exitApp = false;
             while (!exitApp)
             {
-                login.UserLogin();
+                login.UserLogin(topLeftX, topLeftY, width);
                 bool exitMenu = false;
                 while (!exitMenu)
                 {
-                    display.MenuScreen();
-                    string selection = input.StringInput(41, 12);
+                    display.MenuScreen(topLeftX, topLeftY, width);
+                    string selection = input.StringInput(topLeftX + 43, topLeftY + 11, width);
                     switch (selection)
                     {
                         case "1":
-                            menu.CreateAccount();
+                            menu.CreateAccount(topLeftX, topLeftY, width);
                             break;
                         case "2":
-                            menu.SearchAccount();
+                            menu.SearchAccount(topLeftX, topLeftY, width);
                             break;
                         case "3":
-                            menu.AccountDeposit();
+                            menu.AccountDeposit(topLeftX, topLeftY, width);
                             break;
                         case "4":
-                            menu.AccountWithdraw();
+                            menu.AccountWithdraw(topLeftX, topLeftY, width);
                             break;
                         case "5":
-                            menu.AccountStatement();
+                            menu.AccountStatement(topLeftX, topLeftY, width);
                             break;
                         case "6":
-                            menu.DeleteAccount();
+                            menu.DeleteAccount(topLeftX, topLeftY, width);
                             break;
                         case "7":
-                            display.ExitScreen();
-                            string exitSelection = input.StringInput(35, 8);
+                            display.ExitScreen(topLeftX, topLeftY, width);
+                            string exitSelection = input.StringInput(topLeftX + 43, topLeftY + 8, width);
                             switch (exitSelection)
                             {
                                 case "1":
@@ -56,12 +59,12 @@ namespace SimpleBankManagementSystemWin
                                 case "3":
                                     break;
                                 default:
-                                    exitSelection = input.StringInput(35, 8);
+                                    exitSelection = input.StringInput(topLeftX + 43, topLeftY + 8, width);
                                     break;
                             }
                             break;
                         default:
-                            selection = input.StringInput(35, 12);
+                            selection = input.StringInput(topLeftX + 35, topLeftY + 12, width);
                             break;
                     }
                 }
