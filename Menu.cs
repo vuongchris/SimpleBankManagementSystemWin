@@ -61,15 +61,22 @@ namespace SimpleBankManagementSystemWin
                             }
                             else
                             {
-                                if (!input.ValidateEmail(emailAddress))
+                                if (!input.ValidateEmailFormat(emailAddress))
                                 {
-                                    display.ErrorMessage("Invalid Email Address!", x + 2, y + 13, width);
+                                    display.ErrorMessage("Invalid Email Format!", x + 2, y + 13, width);
                                     retry = display.PromptMessage("Retry", x + 2, y + 14, width);
-                                }
-                                else
+                                } else
                                 {
-                                    CreateAccountFile(firstName, lastName, address, phoneNumber, emailAddress, x, y + 12, width);
-                                    retry = display.PromptMessage("Create Another Account", x + 2, y + 16, width);
+                                    if (!input.ValidateEmail(emailAddress))
+                                    {
+                                        display.ErrorMessage("Email Address Does Not Exist!", x + 2, y + 13, width);
+                                        retry = display.PromptMessage("Retry", x + 2, y + 14, width);
+                                    }
+                                    else
+                                    {
+                                        CreateAccountFile(firstName, lastName, address, phoneNumber, emailAddress, x, y + 12, width);
+                                        retry = display.PromptMessage("Create Another Account", x + 2, y + 16, width);
+                                    }
                                 }
                             }
                         }

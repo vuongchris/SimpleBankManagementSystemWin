@@ -98,6 +98,30 @@ namespace SimpleBankManagementSystemWin
             }
             return validEmail;
         }
+
+        public bool ValidateEmailFormat(string email)
+        {
+            bool emailSymbol = false;
+            for (int i = 0; i < email.Length; i++)
+            {
+                if (email[i] == '@')
+                {
+                    emailSymbol = true;
+                } 
+                else if ((i == 0 || i == email.Length) && (email[i] == '@' || email[i] == '.'))
+                {
+                    return false;
+                }
+            }
+
+            if (emailSymbol)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
         
         /// <summary>
         /// Used to check if user input is an integer
