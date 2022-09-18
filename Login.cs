@@ -17,6 +17,12 @@ namespace SimpleBankManagementSystemWin
             input = new Input();
         }
 
+        /// <summary>
+        /// Logic for Login
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void UserLogin(int x, int y, int width)
         {
             display.LoginScreen(x, y, width);
@@ -31,14 +37,22 @@ namespace SimpleBankManagementSystemWin
                 username = input.StringInput(x + 12, y + 6, width);
                 password = input.PasswordInput(x + 12, y + 7, width);
             }
+
             display.LoginSuccessMessage(x, y + 9, width);
         }
 
+        /// <summary>
+        /// Checks username and password is in login.txt
+        /// </summary>
+        /// <param name="inputUsername"></param>
+        /// <param name="inputPassword"></param>
+        /// <returns></returns>
         public bool CheckCredentials(string inputUsername, string inputPassword)
         {
             foreach (string line in System.IO.File.ReadLines($"login.txt"))
             {
                 string[] elements = line.Split(new char[] { '|' }, StringSplitOptions.None);
+                
                 if (inputUsername == elements[0])
                 {
                     if (inputPassword == elements[1])

@@ -10,7 +10,8 @@ namespace SimpleBankManagementSystemWin
         Email email;
         Input input;
         string directory;
-        string accountNumber;
+        string accountNumber, selection;
+        bool retry, foundAccount, sendEmail, delete, correctInfo;
 
         public Menu()
         {
@@ -28,7 +29,7 @@ namespace SimpleBankManagementSystemWin
         /// <param name="width"></param>
         public void CreateAccount(int x, int y, int width)
         {
-            bool retry = true;
+            retry = true;
             while (retry)
             {
                 display.CreateAccountScreen(x, y, width);
@@ -40,7 +41,7 @@ namespace SimpleBankManagementSystemWin
                 string emailAddress = input.StringInput(x + 11, y + 10, width);
 
                 display.AddBox(x, y + 12, 6, width);
-                bool correctInfo = display.PromptMessage("Is the information correct", x + 2, y + 13, width);
+                correctInfo = display.PromptMessage("Is the information correct", x + 2, y + 13, width);
 
                 if (correctInfo)
                 {
@@ -68,7 +69,6 @@ namespace SimpleBankManagementSystemWin
                                 else
                                 {
                                     CreateAccountFile(firstName, lastName, address, phoneNumber, emailAddress, x, y + 12, width);
-                                    email.sendEmail(emailAddress,x + 2, y + 15, width);
                                     retry = display.PromptMessage("Create Another Account", x + 2, y + 16, width);
                                 }
                             }
@@ -79,8 +79,7 @@ namespace SimpleBankManagementSystemWin
                         display.ErrorMessage("All Fields Must Be Filled!", x + 2, y + 13, width);
                         retry = display.PromptMessage("Retry", x + 2, y + 14, width);
                     }
-                }
-                else
+                } else
                 {
                     retry = display.PromptMessage("Retry", x + 2, y + 14, width);
                 }
@@ -101,13 +100,21 @@ namespace SimpleBankManagementSystemWin
         public void CreateAccountFile(string firstName, string lastName, string address, string phoneNumber, string emailAddress, int x, int y, int width)
         {
             int accountNumber = NextAvailableNumber();
+            
             string[] lines = {
                 $"First Name|{firstName}", $"Last Name|{lastName}", $"Address|{address}", $"Phone|{phoneNumber}", $"Email|{emailAddress}", $"Account|{accountNumber}", $"Balance|0"
             };
-
-            File.WriteAllLines($@"{directory}\\Accounts\\{accountNumber}.txt", lines);
-
-            display.CreateSuccessScreen(accountNumber, x, y, width);
+            
+            try
+            {
+                File.WriteAllLines($@"{directory}\\Accounts\\{accountNumber}.txt", lines);
+                display.CreateSuccessScreen(accountNumber, x, y, width);
+                email.SendEmail(accountNumber.ToString(), x + 2, y + 3, width);
+            } 
+            catch (FileNotFoundException)
+            {
+                display.ErrorMessage("Account File Could Not Be Created!", x, y, width);
+            }
         }
 
         /// <summary>
@@ -125,6 +132,7 @@ namespace SimpleBankManagementSystemWin
             }
             return 0;
         }
+
         /// <summary>
         /// Logic for Search Account
         /// </summary>
@@ -133,16 +141,16 @@ namespace SimpleBankManagementSystemWin
         /// <param name="width"></param>
         public void SearchAccount(int x, int y, int width)
         {
-            bool retry = true;
+            retry = true;
             while (retry)
             {
-                display.SearchScreen(x,y,width);
+                display.AccountInputScreen("SEARCH FOR ACCOUNT", x, y, width);
                 accountNumber = input.StringInput(x + 18, y + 6, width);
-                display.AddBox(x, y + 8, 4, width);
-                bool foundAccount = FindAccount(accountNumber, x + 2, y + 9, width);
+                foundAccount = FindAccount(accountNumber, x, y + 8, width);
+
                 if (foundAccount)
                 {
-                    display.SearchSuccessScreen(x,y+9,width);
+                    display.SearchSuccessScreen(x, y + 9, width);
                     display.DisplayDetails(accountNumber, x, y + 12, width);
                     display.AddBox(x, y + 22, 3, width);
                     retry = display.PromptMessage("Check another account", x + 2, y + 23, width);
@@ -153,6 +161,7 @@ namespace SimpleBankManagementSystemWin
                 }
             }
         }
+
         /// <summary>
         /// Logic for Deposit Account
         /// </summary>
@@ -161,19 +170,19 @@ namespace SimpleBankManagementSystemWin
         /// <param name="width"></param>
         public void AccountDeposit(int x, int y, int width)
         {
-            bool retry = true;
+            retry = true;
             while (retry)
             {
-                display.DepositScreen(x,y,width);
+                display.AmountInputScreen("DEPOSIT", x, y, width);
                 accountNumber = input.StringInput(x + 18, y + 6, width);
-                display.AddBox(x, y + 9, 4, width);
-                bool foundAccount = FindAccount(accountNumber, x + 2, y + 10, width);
+                foundAccount = FindAccount(accountNumber, x, y + 9, width);
+
                 if (foundAccount)
                 {
                     display.SuccessMessage("Account Found! Enter amount", x + 2, y + 10, width);
-                    Console.ForegroundColor = ConsoleColor.White;
                     account = new Account(accountNumber);
                     string stringBalance = input.StringInput(x + 12, y + 7, width);
+                    
                     if (!input.ValidateDouble(stringBalance))
                     {
                         display.ErrorMessage("Invalid Amount! Must be numbers only (0-9)", x + 2, y + 10, width);
@@ -181,6 +190,7 @@ namespace SimpleBankManagementSystemWin
                     }
                     else
                     {
+                       
                         double balance = Convert.ToDouble(stringBalance);
                         if (balance <= 0)
                         {
@@ -194,8 +204,7 @@ namespace SimpleBankManagementSystemWin
                             retry = display.PromptMessage("Deposit another account", x + 2, y + 11, width);
                         }
                     }
-                }
-                else
+                } else
                 {
                     retry = display.PromptMessage("Retry", x + 2, y + 11, width);
                 }
@@ -209,17 +218,15 @@ namespace SimpleBankManagementSystemWin
         /// <param name="width"></param>
         public void AccountWithdraw(int x, int y, int width)
         {
-            bool retry = true;
+            retry = true;
             while (retry)
             {
-                display.WithdrawScreen(x, y, width);
+                display.AmountInputScreen("WITHDRAW", x, y, width);
                 accountNumber = input.StringInput(x + 18, y + 6, width);
-                display.AddBox(x, y + 9, 4, width);
-                bool foundAccount = FindAccount(accountNumber, x + 2, y + 10, width);
+                foundAccount = FindAccount(accountNumber, x, y + 9, width);
                 if (foundAccount)
                 {
                     display.SuccessMessage("Account Found! Enter amount", x + 2, y + 10, width);
-                    Console.ForegroundColor = ConsoleColor.White;
                     account = new Account(accountNumber);
                     string stringBalance = input.StringInput(x + 12, y + 7, width);
                     if (!input.ValidateDouble(stringBalance))
@@ -265,27 +272,27 @@ namespace SimpleBankManagementSystemWin
         /// <param name="width"></param>
         public void AccountStatement(int x, int y, int width)
         {
-            bool retry = true;
+            retry = true;
             while (retry)
             {
-                display.StatementScreen(x, y, width);
+                display.AccountInputScreen("STATEMENT", x, y, width);
                 accountNumber = input.StringInput(x + 18, y + 6, width);
-                display.AddBox(x, y + 8, 4, width);
-                bool foundAccount = FindAccount(accountNumber, x + 2, y + 9, width);
+                foundAccount = FindAccount(accountNumber, x, y + 8, width);
+
                 if (foundAccount)
                 {
                     display.SuccessMessage("Account Found!", x + 2, y + 9, width);
                     display.SuccessMessage("Statement is shown below.", x + 2, y + 10, width);
-                    Console.ForegroundColor = ConsoleColor.White;
                     display.AddBox(x, y + 12, 2, width);
                     display.CentreText("ACCOUNT STATEMENT", x, y + 13, width);
                     display.DisplayDetails(accountNumber, x, y + 14, width);
                     display.DisplayTransactions(accountNumber, x, y + 24, width);
                     display.AddBox(x, y + 34, 4, width);
-                    bool sendEmail = display.PromptMessage("Send statement to Email", x + 2, y + 35, width);
+                    sendEmail = display.PromptMessage("Send statement to Email", x + 2, y + 35, width);
+                    
                     if (sendEmail)
                     {
-                        email.sendEmail(accountNumber, x + 2, y + 35, width);
+                        email.SendEmail(accountNumber, x + 2, y + 35, width);
                     }
                     retry = display.PromptMessage("Check another account", x + 2, y + 36, width);
                 }
@@ -303,24 +310,25 @@ namespace SimpleBankManagementSystemWin
         /// <param name="width"></param>
         public void DeleteAccount(int x, int y, int width)
         {
-            bool retry = true;
+            retry = true;
             while (retry)
             {
-                display.DeleteAccountScreen(x, y, width);
+                display.AccountInputScreen("DELETE ACCOUNT", x, y, width);
                 accountNumber = input.StringInput(x + 18, y + 6, width);
-                display.AddBox(x, y + 8, 4, width);
-                bool foundAccount = FindAccount(accountNumber, x + 2, y + 9, width);
+                foundAccount = FindAccount(accountNumber, x, y + 8, width);
+                
                 if (foundAccount)
                 {
                     display.SearchSuccessScreen(x, y + 9, width);
                     display.DisplayDetails(accountNumber, x, y + 12, width);
                     display.AddBox(x, y + 22, 4, width);
-                    bool delete = display.PromptMessage("Delete", x + 2, y + 23, width);
+                    delete = display.PromptMessage("Delete", x + 2, y + 23, width);
+                    
                     if (delete)
                     {
-                        File.Delete($@"{directory}\\Accounts\\{accountNumber}.txt");
-                        display.SuccessMessage("Account Deleted!", x + 2, y + 23, width);
+                        DeleteAccountFile(accountNumber, x + 2, y + 23, width);
                     }
+                    
                     retry = display.PromptMessage("Delete another account", x + 2, y + 24, width);
                 }
                 else
@@ -339,31 +347,128 @@ namespace SimpleBankManagementSystemWin
         /// <returns></returns>
         public bool FindAccount(string accountNumber, int x, int y, int width)
         {
+            display.AddBox(x, y, 4, width);
             if (!input.ValidateInt(accountNumber))
             {
-                display.ErrorMessage("Invalid Account Number! Must be numbers only (0-9)", x, y, width);
+                display.ErrorMessage("Invalid Account Number! Must be an integer", x + 2, y + 1, width);
                 return false;
             }
             else
             {
                 if (!input.ValidateLength(accountNumber, 10))
                 {
-                    display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", x, y, width);
+                    display.ErrorMessage("Invalid Account Length! Cannot exceed 10 digits", x + 2, y + 1, width);
                     return false;
                 }
                 else
                 {
-                    if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+                    if (CheckAccountFile(accountNumber, x + 2, y + 1, width))
                     {
                         return true;
-                    }
-                    else
+                    } else
                     {
-                        display.ErrorMessage("Account File Not Found!", x, y, width);
                         return false;
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Check if Account File Exists
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public bool CheckAccountFile(string accountNumber, int x, int y, int width)
+        {
+            try
+            {
+                if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+                {
+                    return true;
+                }
+                else
+                {
+                    display.ErrorMessage("Account File Not Found!", x, y, width);
+                    return false;
+                }
+            } catch (FileNotFoundException)
+            {
+                display.ErrorMessage("Account File Not Found!", x, y, width);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if the file exists then delete it
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        public void DeleteAccountFile(string accountNumber, int x, int y, int width)
+        {
+            try
+            {
+                if (File.Exists($@"{directory}\\Accounts\\{accountNumber}.txt"))
+                {
+                    File.Delete($@"{directory}\\Accounts\\{accountNumber}.txt");
+                    display.SuccessMessage("Account Deleted!", x, y, width);
+                }
+                else
+                {
+                    display.ErrorMessage("Account Could Not Deleted!", x, y, width);
+                }
+            } catch (FileNotFoundException)
+            {
+                display.ErrorMessage("Account Could Not Deleted!", x, y, width);
+            }
+        }
+
+        /// <summary>
+        /// Menu Selection
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public string MenuSelection(int x, int y, int width)
+        {
+            bool retry = true;
+            while (retry)
+            {
+                selection = input.StringInput(x + 43, y, width);
+                if (selection == "1" || selection == "2" || selection == "3" || selection == "4" || selection == "5" || selection == "6" || selection == "7")
+                {
+                    retry = false;
+                } else
+                {
+                    display.AddBox(x, y + 2, 2, width);
+                    display.ErrorMessage("Must input integers between 1-7!", x + 2, y + 3, width);
+                }
+            }
+            return selection;
+        }
+
+        public string ExitSelection(int x, int y, int width)
+        {
+            bool retry = true;
+            while (retry)
+            {
+                selection = input.StringInput(x + 43, y, width);
+                if (selection == "1" || selection == "2" || selection == "3")
+                {
+                    retry = false;
+                }
+                else
+                {
+                    display.AddBox(x, y + 2, 2, width);
+                    display.ErrorMessage("Must input integers between 1-3!", x + 2, y + 3, width);
+                }
+            }
+            return selection;
         }
     }
 }

@@ -27,38 +27,42 @@ namespace SimpleBankManagementSystemWin
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="width"></param>
-        public void sendEmail(string accountNumber, int x, int y, int width)
+        public void SendEmail(string accountNumber, int x, int y, int width)
         {
             display.ClearAt(x, y, width - 3);
             display.ClearAt(x, y + 1, width - 3);
             display.Message("Sending Email...", x, y, width);
+            
             try
             {
                 account = new Account(accountNumber);
                 message = new MailMessage();
-                smtp = new SmtpClient();
-
-                smtp.Host = "smtp.gmail.com";
-                smtp.Port = 587;
-                smtp.EnableSsl = true;
-                smtp.UseDefaultCredentials = false;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.Credentials = new System.Net.NetworkCredential("chrisvuong2607@gmail.com", "opldpwmbyptehbxs");
+                
+                smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    UseDefaultCredentials = false,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new System.Net.NetworkCredential("chrisvuong2607@gmail.com", "opldpwmbyptehbxs")
+                };
 
                 message.From = new MailAddress("chrisvuong2607@gmail.com");
                 message.To.Add(new MailAddress(account.EmailAddress));
                 message.Subject = "Account Statement";
                 message.IsBodyHtml = true;
-                message.Body = emailTemplate(accountNumber);
+                message.Body = EmailTemplate(accountNumber);
+                
                 smtp.Send(message);
-
+                
+                display.ClearAt(x, y, width - 3);
+                display.SuccessMessage("Email Sent Successfully!", x, y, width);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 display.ErrorMessage("Email Could Not Be Sent!", x, y, width);
             }
-            display.ClearAt(x, y, width - 3);
-            display.SuccessMessage("Email Sent Successfully!", x, y, width);
         }
 
         /// <summary>
@@ -66,7 +70,7 @@ namespace SimpleBankManagementSystemWin
         /// </summary>
         /// <param name="accountNumber"></param>
         /// <returns></returns>
-        public string emailTemplate(string accountNumber)
+        public string EmailTemplate(string accountNumber)
         {
             account = new Account(accountNumber);
             transactionHistory = account.TransactionHistory;

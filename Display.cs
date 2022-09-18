@@ -13,7 +13,12 @@ namespace SimpleBankManagementSystemWin
         {
 
         }
-
+        /// <summary>
+        /// Login Interface
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void LoginScreen(int x, int y, int width)
         {
             ClearScreen();
@@ -38,12 +43,18 @@ namespace SimpleBankManagementSystemWin
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        /// <summary>
+        /// Menu Interface
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void MenuScreen(int x, int y, int width)
         {
             int margin = x + ((width / 2) - (26 / 2));
             ClearScreen();
             Header("MAIN MENU", x, y, 2, width);
-            AddBox(x, y + 2, 11, width);
+            AddBox(x, y + 2, 12, width);
             WriteAt("1. Create a new account", margin, y+4);
             WriteAt("2. Search for an account", margin, y+5);
             WriteAt("3. Deposit", margin, y+6);
@@ -51,9 +62,15 @@ namespace SimpleBankManagementSystemWin
             WriteAt("5. A/C statment", margin, y+8);
             WriteAt("6. Delete Account", margin, y+9);
             WriteAt("7. Exit", margin, y+10);
-            WriteAt("Enter your choice (1-7):", margin, y+11);
+            WriteAt("Enter your choice (1-7):", margin, y+12);
         }
 
+        /// <summary>
+        /// Create Account Interface
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void CreateAccountScreen(int x, int y, int width)
         {
             ClearScreen();
@@ -66,22 +83,12 @@ namespace SimpleBankManagementSystemWin
             WriteAt("Phone:", x + 2, y + 9);
             WriteAt("Email:", x + 2, y + 10);
         } 
-
+        
         public void CreateSuccessScreen(int accountNumber, int x, int y, int width)
         {
             AddBox(x, y, 6, width);
             SuccessMessage("Account Created! Details will be provided via email.", 2, y+1,width);
             Message($"Account Number: {accountNumber}", x+2, y+2, width);
-        }
-
-        public void SearchScreen(int x, int y, int width)
-        {
-            ClearScreen();
-            Header("SEARCH FOR ACCOUNT", x, y, 2, width);
-            AddBox(x, y + 2, 6, width);
-            CentreText("Enter account number", x, y + 4, width);
-            WriteAt("Account Number:", x + 2, y + 6);
-
         }
 
         public void SearchSuccessScreen(int x, int y, int width)
@@ -90,6 +97,12 @@ namespace SimpleBankManagementSystemWin
             SuccessMessage("Account details are shown below.", x + 2, y + 1, width);
         }
 
+        /// <summary>
+        /// Asks the user to press any key to continue with application
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void ContinueMessage(int x, int y, int width)
         {
             ClearAt(x, y, width - 3);
@@ -97,6 +110,13 @@ namespace SimpleBankManagementSystemWin
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// Displays Account Details
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void DisplayDetails(string accountNumber, int x, int y, int width)
         {
             Account account = new Account(accountNumber);
@@ -112,15 +132,25 @@ namespace SimpleBankManagementSystemWin
         }
 
 
+        /// <summary>
+        /// Displays Transactions for Account
+        /// </summary>
+        /// <param name="accountNumber"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void DisplayTransactions(string accountNumber, int x, int y, int width)
         {
             int counter;
             Account account = new Account(accountNumber);
             Console.ForegroundColor = ConsoleColor.White;
+            
             AddBox(x, y, 10, width);
             CentreText("Last 5 Transactions", x, y + 2, width);
+            
             List<(DateTime, string, double, double)> transactionHistory = account.TransactionHistory;
             transactionHistory.Reverse();
+            
             if (transactionHistory.Count < 5)
             {
                 counter = transactionHistory.Count;
@@ -128,50 +158,52 @@ namespace SimpleBankManagementSystemWin
             {
                 counter = 5;
             }
+            
             for (int i = 0; i < counter; i++)
             {
                 WriteAt($"{transactionHistory[i].Item1} {transactionHistory[i].Item2} {transactionHistory[i].Item3} {transactionHistory[i].Item4}", x + 2, y + 4 + i);
             }
         }
-
-        public void DepositScreen(int x, int y, int width)
+        
+        /// <summary>
+        /// Interface used to input an account number and amount
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        public void AmountInputScreen(string s, int x, int y, int width)
         {
             ClearScreen();
-            Header("DEPOSIT", x, y, 2, width);
+            Header(s, x, y, 2, width);
             AddBox(x, y + 2, 7, width);
             CentreText("Enter details", x, y + 4, width);
             WriteAt("Account Number:", x + 2, y + 6);
             WriteAt("Amount: $", x + 2, y + 7);
         }
 
-        public void WithdrawScreen(int x, int y, int width)
+        /// <summary>
+        /// Interface used to input an account number
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        public void AccountInputScreen(string s, int x, int y, int width)
         {
             ClearScreen();
-            Header("WITHDRAW", x, y, 2, width);
-            AddBox(x, y + 2, 7, width);
-            CentreText("Enter details", x, y + 4, width);
-            WriteAt("Account Number:", x + 2, y + 6);
-            WriteAt("Amount: $", x + 2, y + 7);
-        }
-
-        public void StatementScreen(int x, int y, int width)
-        {
-            ClearScreen();
-            Header("STATEMENT", x, y, 2, width);
+            Header(s, x, y, 2, width);
             AddBox(x, y + 2, 6, width);
             CentreText("Enter details", x, y + 4, width);
             WriteAt("Account Number:", x + 2, y + 6);
         }
 
-        public void DeleteAccountScreen(int x, int y, int width)
-        {
-            ClearScreen();
-            Header("DELETE ACCOUNT", x, y, 2, width);
-            AddBox(x, y + 2, 6, width);
-            CentreText("Enter details", x, y + 4, width);
-            WriteAt("Account Number:", x + 2, y + 6);
-        }
-
+        /// <summary>
+        /// Exit Menu Interface
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void ExitScreen(int x, int y, int width)
         {
             int margin = x + ((width / 2) - (26 / 2));
@@ -184,12 +216,40 @@ namespace SimpleBankManagementSystemWin
             WriteAt("Enter your choice (1-3):", margin, y + 8);
         }
 
+        /// <summary>
+        /// Message when exiting application
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        public void ExitMessage(int x, int y, int width)
+        {
+            AddBox(x, y, 3, width);
+            Message("Exiting Application...", x + 2, y + 1, width);
+            ContinueMessage(x + 2, y + 2, width);
+        }
+
+        /// <summary>
+        /// Creates a box with centred title
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
         public void Header(string s, int x, int y, int height, int width)
         {
             Box(x, y, height, width);
             CentreText(s, x, y + 1, width);
         }
 
+        /// <summary>
+        /// Centres text
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void CentreText(string s, int x, int y, int width)
         {
             WriteAt(s, x + ((width / 2) - (s.Length / 2)), y);
@@ -201,44 +261,70 @@ namespace SimpleBankManagementSystemWin
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        /// <summary>
+        /// Displays when a successful action has occurred
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void SuccessMessage(string s, int x, int y, int width)
         {
             ClearAt(x, y, width - 3);
             Console.ForegroundColor = ConsoleColor.Green;
             WriteAt(s, x, y);
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
+        /// <summary>
+        /// Displays when an unsuccessful action has occurred
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void ErrorMessage(string s, int x, int y, int width)
         {
             ClearAt(x, y, width - 3);
             Console.ForegroundColor = ConsoleColor.Red;
             WriteAt(s, x, y);
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
+        /// <summary>
+        /// Displays when the application requires a response from the user
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
         public bool PromptMessage(string s, int x, int y, int width)
         {
             bool valid = false;
-            ClearAt(x,y,width - 3);
+            ClearAt(x, y, width - 3);
             Console.ForegroundColor = ConsoleColor.White;
             WriteAt($"{s} (y/n)? ", x, y);
             string selection = Console.ReadLine();
+            
             while (!valid)
             {
-                if (selection == "y" || selection == "n")
+                if (selection == "y" || selection == "n" || selection == "Y" || selection == "N")
                 {
                     break;
                 }
                 else
                 {
                     ErrorMessage("Invalid Character! Please input (y/n)", x, y + 1, width);
-                    ClearAt(y, 1, 60);
-                    Console.ForegroundColor = ConsoleColor.White;
+                    ClearAt(x, y, width - 3);
                     WriteAt($"{s} (y/n)? ", x, y);
                     selection = Console.ReadLine();
                 }
             }
+            
             ContinueMessage(x, y + 1, width);
-            if (selection == "y")
+            
+            if (selection == "y" || selection == "Y")
             {
                 return true;
             }
@@ -249,6 +335,13 @@ namespace SimpleBankManagementSystemWin
 
         }
 
+        /// <summary>
+        /// Displays a message to the user
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void Message(string s, int x, int y, int width)
         {
             ClearAt(x, y, width - 3);
@@ -256,6 +349,13 @@ namespace SimpleBankManagementSystemWin
             WriteAt(s, x, y);
         }
 
+        /// <summary>
+        /// Creates a box with at (x,y)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
         public void Box(int x, int y, int height, int width)
         {
             HorizontalLine(x + 1, y, width - 1);
@@ -266,6 +366,13 @@ namespace SimpleBankManagementSystemWin
 
         }
 
+        /// <summary>
+        /// Adds a box below another box
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="height"></param>
+        /// <param name="width"></param>
         public void AddBox(int x, int y, int height, int width)
         {
             Box(x, y, height, width);
@@ -274,6 +381,12 @@ namespace SimpleBankManagementSystemWin
             WriteAt("┤", x + width, y);
         }
 
+        /// <summary>
+        /// Draws a horizontal line at (x,y) 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void HorizontalLine(int x, int y, int width)
         {
             for (int i = x; i <= x + width; i++)
@@ -282,14 +395,12 @@ namespace SimpleBankManagementSystemWin
             }
         }
 
-        public void HorizontalLine(string s, int x, int y, int width)
-        {
-            for (int i = x; i <= x + width; i++)
-            {
-                WriteAt(s, i, y);
-            }
-        }
-
+        /// <summary>
+        /// Draws a vertical line at (x,y)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="height"></param>
         public void VerticalLine(int x, int y, int height)
         {
             for (int i = y; i <= y + height; i++)
@@ -298,14 +409,13 @@ namespace SimpleBankManagementSystemWin
             }
         }
 
-        public void VerticalLine(string s, int x, int y, int height)
-        {
-            for (int i = y; i <= y + height; i++)
-            {
-                WriteAt(s, x, i);
-            }
-        }
-
+        /// <summary>
+        /// Draws corners of a box
+        /// </summary>
+        /// <param name="topLeftX"></param>
+        /// <param name="topLeftY"></param>
+        /// <param name="bottomRightX"></param>
+        /// <param name="bottomRightY"></param>
         public void Corners(int topLeftX, int topLeftY, int bottomRightX, int bottomRightY)
         {
             WriteAt("┌", topLeftX, topLeftY);
@@ -314,7 +424,12 @@ namespace SimpleBankManagementSystemWin
             WriteAt("┘", bottomRightX, bottomRightY);
         }
 
-
+        /// <summary>
+        /// Clears a line at (x,y)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         public void ClearAt(int x, int y, int width)
         {
             for (int i = x; i <= x + width; i++)
@@ -323,6 +438,12 @@ namespace SimpleBankManagementSystemWin
             }
         }
 
+        /// <summary>
+        /// Writes a string at (x,y)
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void WriteAt(string s, int x, int y)
         {
             try

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,9 +20,9 @@ namespace SimpleBankManagementSystemWin
         /// <summary>
         /// Used for inputting anything from the user
         /// </summary>
-        /// <param name="x"> X Position of Cursor </param>
-        /// <param name="y"> Y Position of Cursor </param>
-        /// <param name="width"> Width of Box</param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
         /// <returns> string </returns>
         public string StringInput(int x, int y, int width)
         {
@@ -47,6 +48,7 @@ namespace SimpleBankManagementSystemWin
             {
                 var keyPressed = Console.ReadKey(true);
                 key = keyPressed.Key;
+                
                 if (key == ConsoleKey.Backspace && password.Length > 0)
                 {
                     Console.Write("\b \b");
@@ -72,12 +74,10 @@ namespace SimpleBankManagementSystemWin
             if (number.Length <= length)
             {
                 return true;
-            }
-            else
+            } else
             {
                 return false;
             }
-
         }
 
         /// <summary>
@@ -87,14 +87,16 @@ namespace SimpleBankManagementSystemWin
         /// <returns> bool </returns>
         public bool ValidateEmail(string email)
         {
-            for (int i = 0; i < email.Length; i++)
+            bool validEmail;
+            try
             {
-                if ((i == 0 || i == email.Length) && (email[i] == '@' || email[i] == '.'))
-                {
-                    return false;
-                }
+                var emailAddress = new MailAddress(email);
+                validEmail = true;
+            } catch
+            {
+                validEmail = false;
             }
-            return true;
+            return validEmail;
         }
         
         /// <summary>
@@ -104,8 +106,7 @@ namespace SimpleBankManagementSystemWin
         /// <returns> bool </returns>
         public bool ValidateInt(string number)
         {
-            int defaultValue = -1;
-            bool result = int.TryParse(number, out defaultValue);
+            bool result = int.TryParse(number, out _);
             return result;
         }
 
@@ -116,8 +117,7 @@ namespace SimpleBankManagementSystemWin
         /// <returns> bool </returns>
         public bool ValidateDouble(string number)
         {
-            double defaultValue = -1.00;
-            bool result = double.TryParse(number, out defaultValue);
+            bool result = double.TryParse(number, out _);
             return result;
         }
 

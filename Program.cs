@@ -20,10 +20,12 @@ namespace SimpleBankManagementSystemWin
             {
                 login.UserLogin(topLeftX, topLeftY, width);
                 bool exitMenu = false;
+                
                 while (!exitMenu)
                 {
                     display.MenuScreen(topLeftX, topLeftY, width);
-                    string selection = input.StringInput(topLeftX + 43, topLeftY + 11, width);
+
+                    string selection = menu.MenuSelection(topLeftX, topLeftY + 12, width);
                     switch (selection)
                     {
                         case "1":
@@ -46,7 +48,7 @@ namespace SimpleBankManagementSystemWin
                             break;
                         case "7":
                             display.ExitScreen(topLeftX, topLeftY, width);
-                            string exitSelection = input.StringInput(topLeftX + 43, topLeftY + 8, width);
+                            string exitSelection = menu.ExitSelection(topLeftX, topLeftY + 8, width);
                             switch (exitSelection)
                             {
                                 case "1":
@@ -57,18 +59,18 @@ namespace SimpleBankManagementSystemWin
                                     exitApp = true;
                                     break;
                                 case "3":
+                                    exitMenu = false;
                                     break;
                                 default:
-                                    exitSelection = input.StringInput(topLeftX + 43, topLeftY + 8, width);
                                     break;
                             }
                             break;
                         default:
-                            selection = input.StringInput(topLeftX + 35, topLeftY + 12, width);
                             break;
                     }
                 }
             }
+            display.ExitMessage(topLeftX, topLeftY + 10, width);
         }
     }
 }

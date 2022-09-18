@@ -1,2 +1,2 @@
-admin|admin5678
-guest|pass1234
+admin|sbms1234
+guest|pass4321

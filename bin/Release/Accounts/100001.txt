@@ -1,7 +1,9 @@
 First Name|Christopher
 Last Name|Vuong
-Address|29 Nichols Ave, Revesby NSW 2212
-Phone|0469849320
+Address|15 Broadway, Ultimo NSW 2007
+Phone|1356853000
 Email|vngchris3@gmail.com
 Account|100001
-Balance|0
+Balance|900
+18/09/2022 18:22:03|Deposit|1000|1000
+18/09/2022 21:08:17|Withdraw|100|900
